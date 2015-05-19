@@ -267,8 +267,7 @@
 
 <body class="day">
     <div id="header">
-<a href="game.html">test</a>
-        <span class="mine" id="score"></span><i class="icon-award"></i><span class="top">2000</span>
+        <span class="mine" id="score"></span><i class="icon-award"></i><span class="top" style="display:none">2000</span>
         <div id="showZB"></div>
         <div id="showOP"></div>
         <div id="showBODY" style="position:fixed;left:0;top:0;"></div>
@@ -337,13 +336,23 @@
         </ul>
     </div>
     <script>
+		function getQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null)
+                return unescape(r[2]);
+            return null;
+        }
+	var room="";
+	if (getQueryString("room") != null)
+    	 room = getQueryString("room");
 	var d = document;
 	var height = d.documentElement.clientHeight;
 	var width = d.documentElement.clientWidth;
 	var cover = d.getElementById('cover');
 	cover.style.height = height + 'px';
-	document.getElementById('main').style.marginTop = (height - 128) / 2 -106 +"px";
-	document.getElementById('day').onclick = function(){
+	d.getElementById('main').style.marginTop = (height - 128) / 2 -106 +"px";
+	d.getElementById('day').onclick = function(){
 			var body = document.body;
 			if(body.className == 'day') {
 				body.className="night";
@@ -355,11 +364,11 @@
 			}
 			//document.getElementById('set').style.display = "none";
 	}
-	document.getElementById('music').onclick = function(){
+	d.getElementById('music').onclick = function(){
 			var i = this.getElementsByTagName('i')[0];
 			(i.className == 'icon-volume-off') ? i.className = 'icon-volume-down' : i.className = 'icon-volume-off';
 	}
-	document.getElementById('openset').onclick = function(){
+	d.getElementById('openset').onclick = function(){
 		var set = document.getElementById('set');
 		if(set.style.display == "block") {
 			set.style.display = "none" ;
@@ -371,25 +380,25 @@
 			}
 	}
 	cover.onclick = function(){
-		document.getElementById('set').style.display = "none" ;
-		document.getElementById('toplist').style.display = "none" ;
+		d.getElementById('set').style.display = "none" ;
+		d.getElementById('toplist').style.display = "none" ;
 		var li = toplist.getElementsByTagName("li");
 		for(var i=0;i<li.length;i++)li[i].style.display = "none";
 		this.style.display = "none" ;
-		document.getElementById('stop').getElementsByTagName('i')[0].className = "icon-pause";
+		d.getElementById('stop').getElementsByTagName('i')[0].className = "icon-pause";
 	}
 	var aaa=new game(); ;
-	document.getElementById('start').onclick = function(){
-		document.getElementById('main').style.display="none";
-		document.getElementById('game').style.display="block";
-		document.getElementById('home1').style.display="inline-block";
-		document.getElementById('home').style.display="inline-block";
-		document.getElementById('replay').style.display="inline-block";
+	d.getElementById('start').onclick = function(){
+		d.getElementById('main').style.display="none";
+		d.getElementById('game').style.display="block";
+		d.getElementById('home1').style.display="inline-block";
+		d.getElementById('home').style.display="inline-block";
+		d.getElementById('replay').style.display="inline-block";
 		aaa.init();
 	}
-	document.getElementById('stop').onclick = function(){
+	d.getElementById('stop').onclick = function(){
 		
-		var set = document.getElementById('set');
+		var set = d.getElementById('set');
 		if(set.style.display == "block") {
 			set.style.display = "none" ;
 			this.getElementsByTagName('i')[0].className = "icon-pause";
@@ -401,29 +410,29 @@
 		}
 	}
 	
-	document.getElementById('home').onclick = function(){
-				document.getElementById('main').style.display="block";
-				document.getElementById('game').style.display="none";
-				document.getElementById('replay').style.display="none";
-				document.getElementById('endgame').style.display="none";
+	d.getElementById('home').onclick = function(){
+				d.getElementById('main').style.display="block";
+				d.getElementById('game').style.display="none";
+				d.getElementById('replay').style.display="none";
+				d.getElementById('endgame').style.display="none";
 				this.style.display="none";
 				cover.click();
 }	
-document.getElementById('home1').onclick = function(){
-				document.getElementById('main').style.display="block";
-				document.getElementById('game').style.display="none";
-				document.getElementById('replay').style.display="none";
-				document.getElementById('endgame').style.display="none";
-				document.getElementById('home').style.display="none";
+d.getElementById('home1').onclick = function(){
+				d.getElementById('main').style.display="block";
+				d.getElementById('game').style.display="none";
+				d.getElementById('replay').style.display="none";
+				d.getElementById('endgame').style.display="none";
+				d.getElementById('home').style.display="none";
 				this.style.display="none";
 				cover.click();
 }	
-document.getElementById('replay').onclick = function(){
-	document.getElementById('endgame').style.display="none";
+d.getElementById('replay').onclick = function(){
+	d.getElementById('endgame').style.display="none";
 	aaa.init();
 }
-document.getElementById("top").onclick = function () {
-	    var lst = document.getElementById("toplist");
+d.getElementById("top").onclick = function () {
+	    var lst = d.getElementById("toplist");
 	    cover.style.display = "block";
 	    lst.style.display = "block";
 	    lst.style.paddingTop = (height - 375) / 2 + 'px';
@@ -439,10 +448,10 @@ document.getElementById("top").onclick = function () {
 function game(){
 		var obj = this;
 		this.gamenum = 0;
-		this.gamebody = document.getElementById('gamebody');
-		this.scorebox = document.getElementById('score');
-		this.game = document.getElementById('game');
-		this.option = [{e:document.getElementById('option1')},{e:document.getElementById('option2')},{e:document.getElementById('option3')}];
+		this.gamebody = d.getElementById('gamebody');
+		this.scorebox = d.getElementById('score');
+		this.game = d.getElementById('game');
+		this.option = [{e:d.getElementById('option1')},{e:d.getElementById('option2')},{e:d.getElementById('option3')}];
 		this.shape = [
 		//4格一
 		[[0,0,0,0],
