@@ -4,338 +4,71 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
 <title>game</title>
-    <link rel="stylesheet" href="css/shop.css">
-    <link rel="stylesheet" href="css/animation.css"><!--[if IE 7]><link rel="stylesheet" href="css/shop-ie7.css"><![endif]-->
-    
-    <style>
-	*{padding:0;margin:0;font-family:微软雅黑}li{list-style:none}
-	body.night{background:#232323}
-	body.day{background:#fff}
-	#header{text-align:center;color:#5fb7e9;padding:20px 0;}
-	#header i{font-size:35px;position:relative;top:2px;}
-	#header span{font-size:20px;}
-	#header span.mine{color:#c0de88}
-	#header span.top{color:#67bfc9}
-	#main{
-		margin-top:50px;	
-	}
-	#main .start{
-		background:#98dc55;
-		width:170px;
-		height:70px;
-		line-height:70px;
-		text-align:center;
-		margin:0 auto;
-		border-radius:10px;
-	}
-	#main .start i{color:#fff;font-size:30px;}
-	#main .btnbox{
-		width:170px;
-		text-align:center;
-		margin:5px auto;
-		display: box;
-		display: -webkit-box;
-		display: -moz-box;
-		display: -ms-box;
-		display: flex;
-		display: -webkit-flex;
-	}
-	#main .btnbox li{
-		box-flex: 1;
-		-webkit-box-flex: 1;
-		-moz-box-flex: 1;
-		-ms-box-flex: 1;
-		flex: 1;
-		-webkit-flex: 1;
-		color:#fff;
-		height:53px;
-		line-height:53px;
-		border-radius:10px;
-		font-size:24px;
-	}
-	#main .btnbox li:nth-of-type(1){
-		background:#ffc63e	
-	}
-	#main .btnbox li:nth-of-type(2){
-		margin:0 5px;
-		background:#7d8ed4;
-		transform:rotate(270deg);
-		-ms-transform:rotate(270deg); 	/* IE 9 */
-		-moz-transform:rotate(270deg); 	/* Firefox */
-		-webkit-transform:rotate(270deg); /* Safari 和 Chrome */
-		-o-transform:rotate(270deg); 	/* Opera */
-	}
-	#main .btnbox li:nth-of-type(2) i{position:relative;bottom:2px;}
-	#main .btnbox li:nth-of-type(3){
-		background:#ed954b	
-	}
-	#set{
-		display:none;
-		position:fixed;bottom:0;width:100%;
-		height:100px;
-		background:#5cbde7;
-		-webkit-animation: 1s set ;
-		-moz-animation: 1s set ;
-		animation: 1s set;
-	}
-	#set .setlist{
-		padding-top:20px;
-			width:200px;
-			margin:0 auto;
-			text-align:center;
-	}
-	#set .setlist li{
-		display:inline-block;
-		width:53px;
-		height:53px;
-		line-height:53px;
-		border-radius:10px;
-		font-size:27px;
-		color:#5cbde7;
-		background:#fff;
-	}
-	#endgame{
-		display:none;
-		position:fixed;top:0px;width:100%;
-		height:100%;
-		-webkit-animation: 1s endgame ;
-		-moz-animation: 1s endgame ;
-		animation: 1s endgame;
-		
-	}
-	#endgame .end{
-		margin:0 auto;
-		width:100%;max-width:500px;
-		background:url(http://y0.ifengimg.com/news/game/caizi/images/fx.png);background-size:cover;
-	}
-	#endgame .endlist{
-			text-align:center;
-	}
-	#endgame .endlist li{
-		display:inline-block;
-		width:70px;
-		height:70px;
-		line-height:70px;
-		border-radius:10px;
-		font-size:27px;
-		color:#ffffff;
-		
-	}
-	#endgame .endlist li:nth-of-type(1){
-		background:#de6e5f
-		
-	}
-	#endgame .endlist li:nth-of-type(2){
-		background:#7e8ed5
-	}
-	@-webkit-keyframes endgame{
-	   0% {bottom:-100px;opacity: 0;}
-	  100% { bottom:0;opacity: 1;}
-	}
-	@-moz-keyframes endgame {
-	 0% {bottom:-100px;opacity: 0;}
-	  100% { bottom:0;opacity: 1;}
-	}
-	@keyframes endgame{
-	   0% {bottom:-100px;opacity: 0;}
-	  100% { bottom:0;opacity: 1;}
-	}
-	@-webkit-keyframes set {
-	  0% {bottom:-100px;}
-	  100% { bottom:0;}
-	}
-	@-moz-keyframes set {
-	  0% {bottom:-100px;}
-	  100% { bottom:0;}
-	}
-	@keyframes set{
-	  0% {bottom:-100px;}
-	  100% { bottom:0;}
-	}
-	@-webkit-keyframes game {
-	  0% {bottom:-100px;opacity: 0;}
-	  100% { bottom:0;opacity: 1;}
-	}
-	@-moz-keyframes game {
-	  0% {bottom:-100px;opacity: 0;}
-	  100% { bottom:0;opacity: 1;}
-	}
-	@keyframes game{
-	  0% {bottom:-100px;opacity: 0;}
-	  100% { bottom:0;opacity: 1;}
-	}
-	@-webkit-keyframes top {
-	  0% {left:-100px;opacity: 0;}
-	  100% { left:0;opacity: 1;}
-	}
-	@-moz-keyframes top {
-	  0% {left:-100px;opacity: 0;}
-	  100% { left:0;opacity: 1;}
-	}
-	@keyframes top{
-	  0% {left:-100px;opacity: 0;}
-	  100% { left:0;opacity: 1;}
-	}
-	#cover{
-		background:rgba(3,3,3,.5)	;
-		position:fixed;
-		top:0;
-		width:100%;
-		display:none;
-	}
-	#game{
-		width:90%;
-		max-width:450px;
-		margin:0 auto;
-		display:none;
-		position:relative;
-		-webkit-animation: 1s game ;
-		-moz-animation: 1s game ;
-		animation: 1s game;
-	}
-	.gamebody{
-		position:relative;	
-	}
-	.gamebody i{
-		background:rgb(225,225,225);
-		position:absolute;	
-		border-radius:4px;
-	}
-	.chosen-list{
-		margin:0 auto;
-	}
-	.chosen-list li{
-		position:absolute;	
-		cursor:pointer;
-	}
-	.chosen-list li i{
-		position:absolute;
-		border-radius:4px;
-	}
-	#stop{
-		position:absolute;
-		right:10px;
-		top:-40px;
-		font-size:24px;
-		color:#ffda94;
-	}
-	#toplist{
-        position:fixed;
-        top:0;
-        width:100%;
-        z-index:3;
-        display:none;
-        padding-top:20px;
-    }
-    #toplist li{
-        width:90%;
-        max-width:500px;
-        text-align:center;
-        color:#fff;
-        padding:10px 0;
-        margin:3px auto;
-        border-radius:10px;
-        position:relative;
-        -webkit-animation: 1s top ;
-		-moz-animation: 1s top ;
-		animation: 1s top;
-        display:none;
-        box-shadow:1px 1px 3px rgba(0,0,0,.5);
-    }
-    #toplist li:nth-of-type(5n+1){
-        background:rgb(221, 101, 85);
-    }
-    #toplist li:nth-of-type(5n+2){
-        background:rgb(237, 149, 75)
-    }
-    #toplist li:nth-of-type(5n+3){
-        background:rgb(255, 198, 62)
-    }
-    #toplist li:nth-of-type(5n+4){
-        background:rgb(152, 220, 85)
-    }
-    #toplist li:nth-of-type(5n){
-        background:#7d8ed4
-    }
-    #toplist li span{display:inline-block;}
-    #toplist li span:nth-of-type(1){width:15px;font-size:20px;}
-    #toplist li span:nth-of-type(2){width:80px;}
-    #toplist li span:nth-of-type(3){width:40px;}
-    #toplist li span:nth-of-type(4){width:150px;font-size:13px;}
-	</style>
+<link rel="stylesheet" href="css/game.css">
+<!--<script src="/socket.io/socket.io.js"></script>--> 
+<script type="text/javascript" src="js/game.js"></script>
+<link rel="stylesheet" href="css/shop.css">
+<link rel="stylesheet" href="css/animation.css">
+<!--[if IE 7]><link rel="stylesheet" href="css/shop-ie7.css"><![endif]-->
 </head>
 
 <body class="day">
-    <div id="header">
-        <span class="mine" id="score"></span><i class="icon-award"></i><span class="top" style="display:none">2000</span>
-        <div id="showZB"></div>
-        <div id="showOP"></div>
-        <div id="showBODY" style="position:fixed;left:0;top:0;"></div>
-        <div id="showCHECK" style="position:fixed;left:0;bottom:0;"></div>
-    </div>
-    <div id="main">
-    	<div class="start" id="start">
-        	<i class="icon-play"></i>
-        </div>
-    	<ul class="btnbox">
-        	<li id="openset">
-        		<i class="icon-cog"></i>
-            </li>
-            <li id="top">
-        		<i class="icon-align-left"></i>
-            </li>
-            <li>
-        		<i class="icon-star"></i>
-            </li>
-        </ul>
-    </div>
-    <div id="game">
-    	<div id="stop"><i class="icon-pause"></i></div>
-        <div class="gamebody" id="gamebody">
-        	<i></i>
-        </div>
-        <ul class="chosen-list">
-        	<li id="option1">
-            
-            </li>
-            <li id="option2">
-            
-            </li>
-            <li id="option3">
-            
-            </li>
-        </ul>
-    </div>
-    
-	  <div id="endgame">
-      	<div class="end">
-        	<div id="tip">最终分数</div>
-            <ul class="endlist">
-                <li id="home1" style="display:none"><i class="icon-home"></i></li>
-                <li id="replay" style="display:inline-block"><i class="icon-cw"></i></li>
-            </ul>
-        </div>
-    </div>
-    <div id="toplist">
-        <p style="font-size:20px;text-align:center;color:#fff;padding-bottom:20px">排行榜</p>
-        <ul>
-            <li><span>1</span> <span>某某某</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
-            <li><span>2</span> <span>某某某</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
-            <li><span>3</span> <span>某某某</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
-            <li><span>4</span> <span>某某某</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
-            <li><span>5</span> <span>某某某</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
-        </ul>
+<div id="header">
+  <div id="showBODY" style=" position:fixed;left:0;top:0;"></div>
+  <span class="mine" id="score"></span><i class="icon-award"></i><span class="top" style="display:none">2000</span>
+  <div id="showZB"></div>
+  <div id="showOP"></div>
+  <div id="showBODY" style="position:fixed;left:0;top:0;"></div>
+  <div id="showCHECK" style="position:fixed;left:0;bottom:0;"></div>
+</div>
+<div id="main">
+  <div class="start" id="start"> <i class="icon-play"></i> </div>
+  <ul class="btnbox">
+    <li id="openset"> <i class="icon-cog"></i> </li>
+    <li id="top"> <i class="icon-align-left"></i> </li>
+    <li> <i class="icon-star"></i> </li>
+  </ul>
+  <div class="start" id="random" style="background:#34c69f;"> <i class="icon-shuffle"></i> </div>
+</div>
+<div id="game">
+  <div id="stop"><i class="icon-pause"></i></div>
+  <div class="gamebody" id="gamebody"> <i></i> </div>
+  <ul class="chosen-list">
+    <li id="option1"> </li>
+    <li id="option2"> </li>
+    <li id="option3"> </li>
+  </ul>
+  <div id="optcover"></div>
+</div>
+<div id="endgame">
+  <div class="end">
+    <div id="tip">最终分数</div>
+    <ul class="endlist">
+      <li id="home1" style="display:none"><i class="icon-home"></i></li>
+      <li id="replay" style="display:inline-block"><i class="icon-cw"></i></li>
+    </ul>
+  </div>
+</div>
+<div id="toplist">
+  <p style="font-size:20px;text-align:center;color:#fff;padding-bottom:20px">排行榜</p>
+  <ul>
+    <li><span>1</span> <span>某某某</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
+    <li><span>2</span> <span>某某某</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
+    <li><span>3</span> <span>某某某</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
+    <li><span>4</span> <span>某某某</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
+    <li><span>5</span> <span>某某某</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
+  </ul>
+</div>
+<div id="cover"> </div>
+<div id="set">
+  <ul class="setlist">
+    <li id="home" style="display:none"><i class="icon-home"></i></li>
+    <li id="day"><i class="icon-moon-inv"></i></li>
+    <li id="music"><i class="icon-volume-off"></i></li>
+  </ul>
+</div>
 
-    </div>
-    <div id="cover"> </div>
-    <div id="set">
-    	<ul class="setlist">
-        	<li id="home" style="display:none"><i class="icon-home"></i></li>
-        	<li id="day"><i class="icon-moon-inv"></i></li>
-            <li id="music"><i class="icon-volume-off"></i></li>
-        </ul>
-    </div>
-    <script>
+<script>
 		function getQueryString(name) {
             var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
             var r = window.location.search.substr(1).match(reg);
@@ -343,7 +76,7 @@
                 return unescape(r[2]);
             return null;
         }
-	var room="";
+	var room=null;
 	if (getQueryString("room") != null)
     	 room = getQueryString("room");
 	var d = document;
@@ -445,436 +178,14 @@ d.getElementById("top").onclick = function () {
 	        if (n == 4) clearInterval(timer);
 	    }, 300);
 	}
-function game(){
-		var obj = this;
-		this.gamenum = 0;
-		this.gamebody = d.getElementById('gamebody');
-		this.scorebox = d.getElementById('score');
-		this.game = d.getElementById('game');
-		this.option = [{e:d.getElementById('option1')},{e:d.getElementById('option2')},{e:d.getElementById('option3')}];
-		this.shape = [
-		//4格一
-		[[0,0,0,0],
-		[1,1,1,1],
-		[0,0,0,0],
-		[0,0,0,0]],
-		//2格一
-		[[0,0,0,0],
-		[1,1,1,0],
-		[0,0,0,0],
-		[0,0,0,0]],
-		//2格一
-		[[0,0,0,0],
-		[0,1,1,0],
-		[0,0,0,0],
-		[0,0,0,0]],
-		//点
-		[[0,0,0,0],
-		[0,1,0,0],
-		[0,0,0,0],
-		[0,0,0,0]],
-		//2格1
-		[[0,1,0,0],
-		[0,1,0,0],
-		[0,0,0,0],
-		[0,0,0,0]],
-		//3格1
-		[[0,1,0,0],
-		[0,1,0,0],
-		[0,1,0,0],
-		[0,0,0,0]],
-		//4格1
-		[[0,1,0,0],
-		[0,1,0,0],
-		[0,1,0,0],
-		[0,1,0,0]],
-		//2格正方形
-		[[0,0,0,0],
-		[0,1,1,0],
-		[0,1,1,0],
-		[0,0,0,0]],
-		//3格正方形
-		[[1,1,1,0],
-		[1,1,1,0],
-		[1,1,1,0],
-		[0,0,0,0]],
-		//2×2拐角 左上
-		[[0,0,0,0],
-		[0,1,1,0],
-		[0,1,0,0],
-		[0,0,0,0]],
-		//2×2拐角 右上
-		[[0,0,0,0],
-		[0,1,1,0],
-		[0,0,1,0],
-		[0,0,0,0]],
-		//2×2拐角 左下
-		[[0,0,0,0],
-		[0,1,0,0],
-		[0,1,1,0],
-		[0,0,0,0]],
-		//2×2拐角 右下
-		[[0,0,0,0],
-		[0,0,1,0],
-		[0,1,1,0],
-		[0,0,0,0]],
-		//3×3拐角 左上
-		[[1,1,1,0],
-		[1,0,0,0],
-		[1,0,0,0],
-		[0,0,0,0]],
-		//3×3拐角 右上
-		[[1,1,1,0],
-		[0,0,1,0],
-		[0,0,1,0],
-		[0,0,0,0]],
-		//3×3拐角 左下
-		[[1,0,0,0],
-		[1,0,0,0],
-		[1,1,1,0],
-		[0,0,0,0]],
-		//3×3拐角 右下
-		[[0,0,1,0],
-		[0,0,1,0],
-		[1,1,1,0],
-		[0,0,0,0]],
-		//L 左上
-		[[0,1,1,0],
-		[0,1,0,0],
-		[0,1,0,0],
-		[0,0,0,0]],
-		//L 右上
-		[[0,1,1,0],
-		[0,0,1,0],
-		[0,0,1,0],
-		[0,0,0,0]],
-		//L 左下
-		[[0,1,0,0],
-		[0,1,0,0],
-		[0,1,1,0],
-		[0,0,0,0]],
-		//L 右下
-		[[0,0,1,0],
-		[0,0,1,0],
-		[0,1,1,0],
-		[0,0,0,0]]
-		];
-		this.color = ['#ed954b','#dd6555','#e86a82','#5cbdea','#98dc55','#ffc63e'];
-		this.opnum = -1;
-		//alert(this.shape[1][1][1]);
-		this.init = function(){
-			obj.score=0;
-			obj.scorebox.innerHTML = 0;
-			obj.body = [
-				[0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0]
-			];
-			obj.size = Math.floor(obj.gamebody.clientWidth / 10) ;
-			obj.gamebody.style.left = (obj.gamebody.clientWidth - (obj.size * 10 - 2))/2 + 'px';
-			obj.optop = obj.size * 10 + 50;
-			obj.opsize = Math.floor(obj.gamebody.clientWidth / 14) ;
-			obj.side = (obj.gamebody.clientWidth - (obj.opsize * 14 - 1))/2;
-			var str = "";
-			for(var i=0;i<10;i++){
-				for(var j= 0 ;j<10;j++){
-					str += "<i style = 'width:"+(obj.size - 2)+"px;height:"+(obj.size - 2)+"px;top:"+i*obj.size+"px;left:"+j*obj.size+"px'></i>";
-				}
-			}
-			obj.gamebody.innerHTML = str;
-			obj.ilst = obj.gamebody.getElementsByTagName("i");
-			obj.random();
-			if(obj.gamenum<1)
-				obj.bind();
-			obj.gamenum++;
-		}
-		this.bind = function(){
-			eventbind(obj.option[0].e);
-			eventbind(obj.option[1].e);
-			eventbind(obj.option[2].e);
-			function eventbind(element){
-				element.addEventListener("mousedown", movestart);
-				element.addEventListener("mouseup", moveend);
-				element.addEventListener("mousemove", moving);
-				element.addEventListener("touchstart", movestart);
-				element.addEventListener("touchend", moveend);
-				element.addEventListener("touchmove", moving);
-			}
-			var mosedown = false;
-			function movestart(e){
-				e.preventDefault();
-				if(e.changedTouches){e=e.changedTouches[e.changedTouches.length-1];}
-				mosedown = true;
-				var x = e.clientX  || e.pageX , y = e.clientY  || e.pageY;
-				//document.getElementById('showZB').innerHTML = x + " || " + y + "||" +obj.game.offsetLeft + "||" +obj.game.offsetTop ;
-				if(this.id == "option1") obj.opnum = 0;
-				else if(this.id == "option2") obj.opnum = 1;
-				else if(this.id == "option3") obj.opnum = 2;
-				var element = this;
-				obj.fx((obj.opsize),(obj.size),function(x){
-					var ilst = element.getElementsByTagName("i");
-					for(var i=0;i<ilst.length;i++){
-						ilst[i].style.left = Math.floor((i%4)) * x + 'px'; 
-						ilst[i].style.top = Math.floor((i/4)) * x + 'px'; 
-						ilst[i].style.width=x - 2+"px";ilst[i].style.height=x - 2+"px";
-					}
-				},function(){},300,.3)
-				this.style.height = obj.size * 4 + 'px';this.style.width = obj.size * 4 + 'px';
-				this.style.left = x - obj.game.offsetLeft - obj.size *2 + 'px';
-				this.style.top = y - obj.game.offsetTop - obj.size *2 + 'px'; 
-					
-			}
-			function moving(e){
-				e.preventDefault();
-				if(e.changedTouches){e=e.changedTouches[e.changedTouches.length-1];}
-				if(mosedown){
-					var x = e.clientX  || e.pageX, 
-					y = e.clientY  || e.pageY ;
-					//document.getElementById('showZB').innerHTML =(x-3*obj.size) + " || " + (y-3*obj.size) + "||" +obj.game.offsetLeft + "||" +obj.game.offsetTop ;
-					this.style.left = x - obj.game.offsetLeft - obj.size *2 + 'px';
-					this.style.top = y - obj.game.offsetTop - obj.size *2 + 'px'; 
-				}
-			}
-			function moveend(e){
-				e.preventDefault();
-				if(e.changedTouches){e=e.changedTouches[e.changedTouches.length-1];}
-				mosedown = false;
-				var x = e.clientX  || e.pageX, y = e.clientY  || e.pageY;
-				x-=obj.game.offsetLeft;y-=obj.game.offsetTop
-				var col = Math.round((x-2*obj.size)/obj.size);
-				var row = Math.round((y-2*obj.size)/obj.size);
-				obj.shape[obj.option[obj.opnum].shape]
-				function remove(){}
-				if(obj.check(col,row)){
-					obj.option[obj.opnum].e.innerHTML="";
-					obj.scorebox.innerHTML = obj.score;
-					for(var i = 0 ;i<4;i++){
-						for(var j=0;j<4;j++)
-						{
-							if(obj.shape[obj.option[obj.opnum].shape][i][j] == 1)
-							{
-								obj.body[i+row][j+col]=1;
-								obj.ilst[(i+row)*10+j+col].style.background = obj.color[obj.option[obj.opnum].color];
-							}
-						}
-					}
-					obj.remove();
-					if(obj.option[0].e.innerHTML=="" && obj.option[1].e.innerHTML=="" &&obj.option[2].e.innerHTML=="")
-						obj.random();
-					if(obj.checkend()){
-						//cover.click();
-						//cover.style.display = "block";
-						document.getElementById('endgame').style.display="block";
-						var endbox = document.getElementById('endgame').getElementsByTagName("div")[0];
-						endbox.style.padding=(height-90)/2+"px 0" ;
-					}
-				}
-				
-				//document.getElementById('showZB').innerHTML = (x-3*obj.size) + " || " + (y-3*obj.size)+ "||" +col+ "||" +row ;
-				obj.opinit();
-			}
-			
-		}
-		this.check = function(col,row){
-				for(var i = 0 ;i<4;i++){
-						for(var j=0;j<4;j++)
-						{
-							if(i+row<0 || j+col<0){
-								if(obj.shape[obj.option[obj.opnum].shape][i][j] == 1)	return false;
-							}
-							else if((i+row > 9) || (j+col > 9)){
-								if(obj.shape[obj.option[obj.opnum].shape][i][j] == 1)	return false;
-							}
-							else if(obj.body[i+row][j+col] ==1 && obj.shape[obj.option[obj.opnum].shape][i][j] == 1)
-								return false;
-						}
-					}
-					return true;
-		}
-		this.remove = function(){
-					var m=0,n=[],o = [];
-					for(var i=0;i<10;i++){
-						for(var j=0;j<10;j++){
-							if(obj.body[i][j]==1) m++;	
-						}
-						if(m==10)n.push(i);
-						m=0;
-					}
-					for(var i=0;i<10;i++){
-						for(var j=0;j<10;j++){
-							if(obj.body[j][i]==1) m++;	
-						}
-						if(m==10)o.push(i);
-						m=0;
-					}
-					if(n.length >0|| o.length>0){
-						for(var i=0;i<n.length;i++){
-							for(var j=0;j<10;j++){
-									obj.body[n[i]][j]=0;
-							}
-						}
-						for(var i=0;i<o.length;i++){
-							for(var j=0;j<10;j++){
-									obj.body[j][o[i]]=0;
-							}
-						}
-						obj.fx(100,30,function(x){
-							for(var i=0;i<n.length;i++){
-								for(var j=0;j<10;j++){
-										obj.body[n[i]][j]=0;
-										obj.ilst[n[i]*10+j].style.opacity=x / 100;
-								}
-							}
-							for(var i=0;i<o.length;i++){
-								for(var j=0;j<10;j++){
-										obj.body[j][o[i]]=0;
-										obj.ilst[o[i]+j*10].style.opacity=x / 100;
-								}
-							}
-						},function(){
-							obj.fx(30,100,function(x){
-								for(var i=0;i<n.length;i++){
-									for(var j=0;j<10;j++){
-											obj.ilst[n[i]*10+j].style.opacity=x / 100;
-											obj.ilst[n[i]*10+j].style.background="rgb(225,225,225)";
-									}
-								}
-								for(var i=0;i<o.length;i++){
-									for(var j=0;j<10;j++){
-											obj.ilst[o[i]+j*10].style.opacity=x / 100;
-											obj.ilst[o[i]+j*10].style.background="rgb(225,225,225)";
-									}
-								}
-							},function(){},300,.3);
-							
-						},500,.3);
-					}
-					var old = obj.score;
-					if(n.length > 0 && o.length >0)
-						obj.score +=  (n.length + o.length) *10*(n.length + o.length)/2 + obj.option[obj.opnum].num;
-					else
-						obj.score += (n.length + o.length) *10 + obj.option[obj.opnum].num;
-					obj.fx(old,obj.score,function(x){obj.scorebox.innerHTML=Math.floor(x);},function(){},400,.3)
-					//document.getElementById('showBODY').innerHTML = obj.body;
-					//document.getElementById('showBODY').innerHTML+="//"+n;
-					
-		}
-		this.checkend = function(){
-			if(obj.option[0].e.innerHTML !="")
-				if(!checkop(0)) return false;
-			if(obj.option[1].e.innerHTML !="")
-				if(!checkop(1)) return false;
-			if(obj.option[2].e.innerHTML !="")
-				if(!checkop(2)) return false;
-			return true;
-			function checkop(n){
-				for(var i = 0;i<10;i++)
-					for(var j=0;j<10;j++){
-						if(obj.body[i][j] == 0){
-							if(checkop2(i,j,n))
-								return false;
-							else {
-								continue;
-								}
-						}
-						else continue;
-					}
-				return true;
-			}
-			function checkop2(x,y,n){
-				var posti=0;
-				var postj=0;
-				var count=0;
-				for(var i=0;i<4;i++){
-					for(var j=0;j<4;j++){
-						if(obj.shape[obj.option[n].shape][i][j]==1){
-							count++;
-							if(count==1){
-								posti=i;
-								postj=j;
-								continue;
-							}
-							else {
-								if((x+i-posti)>=10||(x+i-posti<0)||(y+j-postj)>=10||(y+j-postj)<0)
-										return false
-								else if(obj.body[x+i-posti][y+j-postj]==0) continue;
-								else return false;
-							}
-						}
-					}
-				}
-				return true;
-			}
-		}
-		this.random = function(){
-			obj.option[0].e.style.top = obj.optop + "px";
-			obj.option[1].e.style.top = obj.optop + "px";
-			obj.option[2].e.style.top = obj.optop + "px";
-			obj.option[0].e.style.left = obj.side + "px";
-			obj.option[1].e.style.left = obj.opsize*5 +obj.side+ "px";
-			obj.option[2].e.style.left = obj.opsize*10 +obj.side+ "px";
-			var x=Math.floor(Math.random()*obj.shape.length),y=Math.floor(Math.random()*obj.shape.length),z=Math.floor(Math.random()*obj.shape.length);
-			while(1){if(x == y)y=Math.floor(Math.random()*obj.shape.length);else break;}
-			while(1){if(x == z || y == z)z=Math.floor(Math.random()*obj.shape.length);else break;}
-			obj.reset(0,x,Math.floor(Math.random()*obj.color.length));
-			obj.reset(1,y,Math.floor(Math.random()*obj.color.length));
-			obj.reset(2,z,Math.floor(Math.random()*obj.color.length));
-			//document.getElementById('showOP').innerHTML = obj.option[0].shape + "//" +obj.option[0].color +'||'+ obj.option[1].shape + "//" +obj.option[1].color  +'||'+  obj.option[2].shape + "//" +obj.option[2].color;
-		}
-		this.reset = function(element,shape,color){
-					var str = "";
-					var n=0;
-					for(var i=0;i<4;i++)
-						for(var j=0;j<4;j++)
-						{
-							str+="<i style='width:"+(obj.opsize -1)+"px;height:"+(obj.opsize-1)+"px;left:"+obj.opsize * j+"px;top:"+obj.opsize * i+"px;";
-							if(obj.shape[shape][i][j]>0) {n++;str+="background:"+obj.color[color] ;}	
-							str+="'></i>";
-						}
-					obj.option[element].e.innerHTML = str;
-					obj.option[element].shape = shape;
-					obj.option[element].color = color;
-					obj.option[element].num = n;
-					//alert(str);
-			}
-		this.opinit = function(){
-			if(obj.opnum>-1){
-				var element = obj.option[(obj.opnum)].e;
-				element.style.top = obj.optop + "px";
-				element.style.left = obj.opsize * (5*(obj.opnum)) + obj.side + "px";
-				element.style.height = obj.opsize * 4 + 'px';element.style.width = obj.opsize * 4 + 'px';
-				var ilst = element.getElementsByTagName("i");
-				for(var i=0;i<ilst.length;i++){
-					ilst[i].style.left = Math.floor((i%4)) * obj.opsize + 'px'; 
-					ilst[i].style.top = Math.floor((i/4)) * obj.opsize + 'px'; 
-					ilst[i].style.width = obj.opsize - 1 + 'px'; 
-					ilst[i].style.height = obj.opsize - 1 + 'px'; 
-				}
-			}
-			else
-			alert("没有选中目标");
-		}
-		this.fx=function(f,t,fn,end,tm,pow){
-			var D=Date;
-			var d=new D;
-			var e;
-			var c=tm||240;
-			var pow=pow||2;
-			return e=setInterval(function (){
-				var z=Math.min(1,(new D-d)/c);
-				(false===fn(+f+(t-f)*Math.pow(z,pow),z)||z==1) && end && end(clearTimeout(e));
-			},10);
-		}
-}
-		
-		//alert(height);
+
+		function getQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null)
+                return unescape(r[2]);
+            return null;
+        }
 	</script>
 </body>
 </html>
