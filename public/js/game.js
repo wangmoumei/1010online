@@ -7,7 +7,8 @@ function game(){
 		this.gamebody = d.getElementById('gamebody');
 		this.scorebox = d.getElementById('score');
 		this.game = d.getElementById('game');
-		this.option = [{e:d.getElementById('option1')},{e:d.getElementById('option2')},{e:d.getElementById('option3')}];
+		this.option = [{e:d.getElementById('option1')},{e:d.getElementById('option2')},{e:d.getElementById('option3')},{e:d.getElementById('op-option1')},{e:d.getElementById('op-option2')},{e:d.getElementById('op-option3')}];
+		this.ul = [d.getElementsByClassName("chosen-list")[0],d.getElementsByClassName("chosen-list")[1]];
 		this.shape = [
 		//4格一
 		[[0,0,0,0],
@@ -216,6 +217,7 @@ function game(){
 				if(mosedown){
 					var x = e.clientX  || e.pageX, 
 					y = e.clientY  || e.pageY ;
+					obj.send(4,{x:x,y:y});
 					//document.getElementById('showZB').innerHTML =(x-3*obj.size) + " || " + (y-3*obj.size) + "||" +obj.game.offsetLeft + "||" +obj.game.offsetTop ;
 					obj.option[obj.opnum].e
 					obj.option[obj.opnum].e.style.left = x - obj.game.offsetLeft - obj.size *2 + 'px';
@@ -504,7 +506,7 @@ function game(){
 						break;	
 					case 4:
 						//move
-						obj.socket.emit('game run', {room:obj.room,opt:opt});
+						obj.socket.emit('game run', {room:obj.room,opt:opt,opnum:obj.opnum});
 						break;	
 					case 5:
 						//out turn
@@ -531,12 +533,24 @@ function game(){
 				});
 				obj.socket.on('game run', function(msg) {
 					//游戏进行中，获得对方信息
-					
+					obj.option[(msg.opnum + 3)].e.style.left = msg.opt.x - obj.game.offsetLeft - obj.size *2 + 'px';
+					obj.option[(msg.opnum + 3)].e.style.top = msg.opt.y - obj.game.offsetTop - obj.size *2 + 'px'; 
 				});
 				obj.socket.on('in turn', function(msg) {
 					//
 					if(mst.type)bodyinit(msg.body);
 					obj.turn = true;
+					obj.send(3);
+					obj.ul[1].style.display = "none";
+					obj.ul[0].style.display = "block";
+				});
+				obj.socket.on('out turn', function(msg) {
+					//msg 选项初始化
+					obj.ul[0].style.display = "none";
+					obj.ul[1].style.display = "block";
+					obj.reset(3,msg.opt[0].shape,msg.opt[0].color);
+					obj.reset(4,msg.opt[1].shape,msg.opt[1].color);
+					obj.reset(5,msg.opt[2].shape,msg.opt[2].color);
 				});
 				obj.socket.on('game end', function(msg) {
 					//游戏结束

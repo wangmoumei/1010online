@@ -89,7 +89,7 @@ game.gameStart = function(socket){
 		if(socket.id == that.Room[msg].joiner.id)that.Room[msg].turn = false;	
 		that.io.to(msg).emit('game start', msg);
 		console.log("房间号" + msg + "游戏开始");
-		socket.emit('in turn', msg);
+		socket.emit('in turn', {type:false});
 	});
 
 };
@@ -99,7 +99,7 @@ game.gameRun = function(socket){
 		var ss;
 		if(that.Room[msg.room].turn) ss = that.Room[msg.room].joiner;
 		else ss=that.Room[msg.room].owner;
-		ss.emit('game run', msg.opt);
+		ss.emit('game run', msg);
 	});
 
 };
@@ -113,8 +113,7 @@ game.inTurn = function(socket){
 		var ss;
 		if(that.Room[msg.room].turn) ss = that.Room[msg.room].joiner;
 		else ss=that.Room[msg.room].owner;
-		that.io.to(msg).emit('game start', msg);
-		ss.emit('in turn', {type:false});
+		ss.emit('out turn', msg.opt);
 	});
 
 };
