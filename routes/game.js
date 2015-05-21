@@ -14,6 +14,8 @@ game.io = false;
 game.userNum=0;
 game.roomNum = 0;
 
+game.Room = [];
+game.roomLog = {};
 
 game.initialize = function(http) {
     console.log('initialize');
@@ -41,48 +43,89 @@ game.ioListen = function() {
 		
 		that.gameEnd(socket);
 
+		that.inTurn();
+		
         that.disconnect(socket);
 
     });
 };
 game.createRoom = function(socket){
     var that = this;
-	//绑发消息的事件,客户端发消息的时候就来激活这个
 	socket.on('create room', function(msg){
-		//msg = that.userName[socket.id] + ': ' + msg;
-		console.log(socket.id + "|" +msg);
-		//先把发消息的人从这个房间范围里踢出去，目的是 为了另外单独向这个人发带标志的消息,避免重复显示
-		socket.leave(that.Room[that.currentRoom[socket.id]].name,function(){
-			//只向这个房间范围的客户端广播,用到io.to(范围).emit
-			that.io.to(that.Room[that.currentRoom[socket.id]].name).emit('chat message', {name:that.userName[socket.id],msg:msg});
+		if(msg = 1){
+			console.log(socket.id + "创建了房间");
 			
-			//单独发消息，新加个 chat myself，右对齐哒
-			socket.emit('chat myself', {name:that.userName[socket.id],msg:msg});
-			
-			//再把他加回来(*•̀ㅂ•́)و
-			socket.join(that.Room[that.currentRoom[socket.id]].name);
-			
-			
+			var room = {owner:socket,joner:null,turn:true};
+			that.Room[that.roomNum] = room;
+			that.gameLog[socket.id] = that.roomNum;
+			that.roomNum++;
+			socket.join(that.roomNum,function(){
+				
+				socket.emit('create room', that.gameLog[socket.id]);
+				
+				
+			});
+		}
+	});
+
+};
+game.joinRoom = function(socket){
+    var that = this;
+	socket.on('join room', function(msg){
+		console.log(socket.id + "加入了"+msg+"号房间");
+		that.Room[msg].joiner = socket;
+		that.gameLog[socket.id] = msg;
+		socket.join(msg,function(){
+			that.io.to(msg).emit('join room', msg);
 		});
 		
 		
 	});
 
 };
-game.joinRoom = function(socket){
-    
-
-};
 game.gameStart = function(socket){
-    
+    var that = this;
+	socket.on('game start', function(msg){
+		if(socket.id == that.Room[msg].joiner.id)that.Room[msg].turn = false;	
+		that.io.to(msg).emit('game start', msg);
+		console.log("房间号" + msg + "游戏开始");
+		socket.emit('in turn', msg);
+	});
 
 };
 game.gameRun = function(socket){
-    
+	var that = this;
+    socket.on('game run', function(msg){
+		var ss;
+		if(that.Room[msg.room].turn) ss = that.Room[msg.room].joiner;
+		else ss=that.Room[msg.room].owner;
+		ss.emit('game run', msg.opt);
+	});
 
 };
 game.gameEnd = function(socket){
     
+
+};
+game.inTurn = function(socket){
+    var that = this;
+	socket.on('in turn', function(msg){
+		var ss;
+		if(that.Room[msg.room].turn) ss = that.Room[msg.room].joiner;
+		else ss=that.Room[msg.room].owner;
+		that.io.to(msg).emit('game start', msg);
+		ss.emit('in turn', {type:false});
+	});
+
+};
+game.outTurn = function(socket){
+    var that = this;
+	socket.on('out turn', function(msg){
+		var ss;
+		if(that.Room[msg.room].turn) ss = that.Room[msg.room].joiner;
+		else ss=that.Room[msg.room].owner;
+		ss.emit('in turn', {type:true,body:msg.body});
+	});
 
 };
 game.disconnect = function(socket){

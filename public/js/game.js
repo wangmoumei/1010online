@@ -1,8 +1,9 @@
 function game(){
 		var obj = this;
-		//this.socket = io();
+		this.socket = null;
 		this.gamenum = 0;
-		this.turn = true;
+		this.turn = false;
+		this.type=1;this.room = -1;
 		this.gamebody = d.getElementById('gamebody');
 		this.scorebox = d.getElementById('score');
 		this.game = d.getElementById('game');
@@ -231,9 +232,8 @@ function game(){
 				var col = Math.round((x-2*obj.size)/obj.size);
 				var row = Math.round((y-2*obj.size)/obj.size);
 				//obj.shape[obj.option[obj.opnum].shape]
-				function remove(){}
 				if(obj.check(col,row)){
-					obj.option[obj.opnum].e.innerHTML="";
+					obj.option[obj.opnum].e.innerHTML="";obj.option[obj.opnum].shape = -1;
 					obj.scorebox.innerHTML = obj.score;
 					for(var i = 0 ;i<4;i++){
 						for(var j=0;j<4;j++)
@@ -452,7 +452,7 @@ function game(){
 			},10);
 		};
 		this.bodyinit = function (newbody) {
-                newbody = newbody.split(",");
+                //newbody = newbody.split(",");
                 obj.fx(100, 30, function (x) {
                     for (var i = 0; i < 10; i++)
                         for (var j = 0; j < 10; j++)
@@ -486,35 +486,44 @@ function game(){
 				{
 					case 0:
 						//创建游戏
-						obj.socket.emit('create room', msg);
+						obj.socket = io();
+						obj.socket.emit('create room', obj.type);
 						break;	
 					case 1:
 						//加入游戏
+						obj.socket.emit('join room', obj.room);
 						break;	
 					case 2:
 						//开始游戏
+						obj.socket.emit('game start', obj.room);
 						break;	
 					case 3:
-						//out turn
-						obj.turn = false;
+						//in turn
+						opt = [{shape:obj.option[0].shape,color:obj.option[0].color},{shape:obj.option[1].shape,color:obj.option[1].color},{shape:obj.option[2].shape,color:obj.option[2].color}];
+						obj.socket.emit('in turn', {room:obj.room,opt:opt});
 						break;	
 					case 4:
 						//move
+						obj.socket.emit('game run', {room:obj.room,opt:opt});
 						break;	
 					case 5:
-						//游戏结束
+						//out turn
+						obj.turn = false;
+						obj.socket.emit('out turn', {room:obj.room,opt:obj.body});
 						break;	
 					case 6:
-						//随机加入游戏
+						//游戏结束
 						break;	
 				}
 			}
 			this.receive = function(){
 				obj.socket.on('create room', function(msg) {
 					//创建一个房间后，获得房间号
+					obj.room = msg;
 				});
 				obj.socket.on('join room', function(msg) {
 					//加入一个房间后，游戏准备开始
+					obj,room = msg;
 				});
 				obj.socket.on('game start', function(msg) {
 					//游戏开始后，游戏初始化
@@ -525,8 +534,9 @@ function game(){
 					
 				});
 				obj.socket.on('in turn', function(msg) {
-					//游戏进行中，获得对方信息
-					
+					//
+					if(mst.type)bodyinit(msg.body);
+					obj.turn = true;
 				});
 				obj.socket.on('game end', function(msg) {
 					//游戏结束
