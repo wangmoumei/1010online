@@ -1,7 +1,7 @@
 {
-    "name": "chat",
+    "name": "1010online",
     "version": "0.0.1",
-    "description": "first socket.io app",
+    "description": "1010 online (socket.io)",
     "dependencies": {
        "express": "^4.9.6",
        "socket.io": "^1.1.0"

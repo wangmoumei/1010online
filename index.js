@@ -22,6 +22,6 @@ app.get('/', function(req, res){
 game.initialize(http);
 
 //监听2501端口
-http.listen(10101, function(){
-  console.log('listening on *:10101');
+http.listen(2505, function(){
+  console.log('listening on *:2505');
 });

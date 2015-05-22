@@ -29,8 +29,8 @@ game.ioListen = function() {
 
     this.io.on('connection', function(socket){
         
-		that.userName[socket.id] = 'Guest' + this.userNum;
-		that.usedName.push('Guest' + this.userNum);
+		//that.userName[socket.id] = 'Guest' + this.userNum;
+		//that.usedName.push('Guest' + this.userNum);
 		that.userNum++;
 		
         that.createRoom(socket);
@@ -43,7 +43,7 @@ game.ioListen = function() {
 		
 		that.gameEnd(socket);
 
-		that.inTurn();
+		that.inTurn(socket);
 		
         that.disconnect(socket);
 
@@ -53,14 +53,14 @@ game.createRoom = function(socket){
     var that = this;
 	socket.on('create room', function(msg){
 		if(msg = 1){
-			console.log(socket.id + "创建了房间");
 			
-			var room = {owner:socket,joner:null,turn:true};
+			
+			var room = {name:"room" + that.rooNum,owner:socket,joner:null,turn:true};
 			that.Room[that.roomNum] = room;
 			that.gameLog[socket.id] = that.roomNum;
 			that.roomNum++;
-			socket.join(that.roomNum,function(){
-				
+			socket.join(room.name,function(){
+				console.log(socket.id + "创建了房间");
 				socket.emit('create room', that.gameLog[socket.id]);
 				
 				
@@ -75,7 +75,7 @@ game.joinRoom = function(socket){
 		console.log(socket.id + "加入了"+msg+"号房间");
 		that.Room[msg].joiner = socket;
 		that.gameLog[socket.id] = msg;
-		socket.join(msg,function(){
+		socket.join(that.Room[msg].name,function(){
 			that.io.to(msg).emit('join room', msg);
 		});
 		
@@ -131,3 +131,4 @@ game.disconnect = function(socket){
     
 
 };
+module.exports = game;

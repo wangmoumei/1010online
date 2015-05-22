@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
 <title>game</title>
 <link rel="stylesheet" href="css/game.css">
-<!--<script src="/socket.io/socket.io.js"></script>--> 
+<script src="/socket.io/socket.io.js"></script>
 <script type="text/javascript" src="js/game.js"></script>
+
 <link rel="stylesheet" href="css/shop.css">
 <link rel="stylesheet" href="css/animation.css">
 <!--[if IE 7]><link rel="stylesheet" href="css/shop-ie7.css"><![endif]-->
@@ -82,6 +83,7 @@
             return null;
         }
 	var room=null;
+	var gm=new game(); 
 	if (getQueryString("room") != null)
     	 room = getQueryString("room");
 	var d = document;
@@ -125,14 +127,16 @@
 		this.style.display = "none" ;
 		d.getElementById('stop').getElementsByTagName('i')[0].className = "icon-pause";
 	}
-	var aaa=new game(); ;
+	
 	d.getElementById('start').onclick = function(){
 		d.getElementById('main').style.display="none";
 		d.getElementById('game').style.display="block";
 		d.getElementById('home1').style.display="inline-block";
 		d.getElementById('home').style.display="inline-block";
 		d.getElementById('replay').style.display="inline-block";
-		aaa.init();
+		//aaa.init();
+		gm.send(0);
+		alert(gm.room);
 	}
 	d.getElementById('stop').onclick = function(){
 		

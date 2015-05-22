@@ -1,5 +1,6 @@
 function game(){
 		var obj = this;
+		var d=document;
 		this.socket = null;
 		this.gamenum = 0;
 		this.turn = false;
@@ -489,6 +490,7 @@ function game(){
 					case 0:
 						//创建游戏
 						obj.socket = io();
+						obj.receive();
 						obj.socket.emit('create room', obj.type);
 						break;	
 					case 1:
@@ -522,10 +524,11 @@ function game(){
 				obj.socket.on('create room', function(msg) {
 					//创建一个房间后，获得房间号
 					obj.room = msg;
+					
 				});
 				obj.socket.on('join room', function(msg) {
 					//加入一个房间后，游戏准备开始
-					obj,room = msg;
+					obj.room = msg;
 				});
 				obj.socket.on('game start', function(msg) {
 					//游戏开始后，游戏初始化
