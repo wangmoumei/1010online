@@ -4,7 +4,7 @@ function game(){
 		this.socket = null;
 		this.gamenum = 0;
 		this.turn = false;
-		this.type=1;this.room = -1;
+		this.type=1;this.room = "null";
 		this.gamebody = d.getElementById('gamebody');
 		this.scorebox = d.getElementById('score');
 		this.game = d.getElementById('game');
@@ -524,7 +524,7 @@ function game(){
 				obj.socket.on('create room', function(msg) {
 					//创建一个房间后，获得房间号
 					obj.room = msg;
-					
+					alertbox(msg);
 				});
 				obj.socket.on('join room', function(msg) {
 					//加入一个房间后，游戏准备开始
@@ -557,6 +557,10 @@ function game(){
 				});
 				obj.socket.on('game end', function(msg) {
 					//游戏结束
+				});
+				obj.socket.on('disconnect', function(msg) {
+					//游戏结束
+					messagebox(msg);
 				});
 			}
 }

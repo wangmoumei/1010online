@@ -4,7 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
 <title>game</title>
+<link rel="stylesheet" href="css/myAnimation.css">
 <link rel="stylesheet" href="css/game.css">
+<link rel="stylesheet" href="css/messagebox.css">
+<script type="text/javascript" src="js/messagebox.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script type="text/javascript" src="js/game.js"></script>
 
@@ -22,7 +25,7 @@
   <div id="showBODY" style="position:fixed;left:0;top:0;"></div>
   <div id="showCHECK" style="position:fixed;left:0;bottom:0;"></div>
 </div>
-<div id="main">
+<div id="main" class="oShow">
   <div class="start" id="start"> <i class="icon-play"></i> </div>
   <ul class="btnbox">
     <li id="openset"> <i class="icon-cog"></i> </li>
@@ -65,7 +68,7 @@
     <li><span>5</span> <span>某某某</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
   </ul>
 </div>
-<div id="cover"> </div>
+<div id="cover" class="oShow"> </div>
 <div id="set">
   <ul class="setlist">
     <li id="home" style="display:none"><i class="icon-home"></i></li>
@@ -75,126 +78,115 @@
 </div>
 
 <script>
-		function getQueryString(name) {
-            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-            var r = window.location.search.substr(1).match(reg);
-            if (r != null)
-                return unescape(r[2]);
-            return null;
-        }
-	var room=null;
-	var gm=new game(); 
-	if (getQueryString("room") != null)
-    	 room = getQueryString("room");
-	var d = document;
-	var height = d.documentElement.clientHeight;
-	var width = d.documentElement.clientWidth;
-	var cover = d.getElementById('cover');
-	cover.style.height = height + 'px';
-	d.getElementById('main').style.marginTop = (height - 128) / 2 -106 +"px";
-	d.getElementById('day').onclick = function(){
-			var body = document.body;
-			if(body.className == 'day') {
-				body.className="night";
-				this.getElementsByTagName('i')[0].className = 'icon-sun';
-			}
-			else{
-				 body.className = 'day';
-				 this.getElementsByTagName('i')[0].className = 'icon-moon-inv';
-			}
-			//document.getElementById('set').style.display = "none";
-	}
-	d.getElementById('music').onclick = function(){
-			var i = this.getElementsByTagName('i')[0];
-			(i.className == 'icon-volume-off') ? i.className = 'icon-volume-down' : i.className = 'icon-volume-off';
-	}
-	d.getElementById('openset').onclick = function(){
-		var set = document.getElementById('set');
-		if(set.style.display == "block") {
-			set.style.display = "none" ;
-			}
-			
-			else 	{
-				set.style.display = "block";
-				cover.style.display = "block";
-			}
-	}
-	cover.onclick = function(){
-		d.getElementById('set').style.display = "none" ;
-		d.getElementById('toplist').style.display = "none" ;
-		var li = toplist.getElementsByTagName("li");
-		for(var i=0;i<li.length;i++)li[i].style.display = "none";
-		this.style.display = "none" ;
-		d.getElementById('stop').getElementsByTagName('i')[0].className = "icon-pause";
-	}
-	
-	d.getElementById('start').onclick = function(){
-		d.getElementById('main').style.display="none";
-		d.getElementById('game').style.display="block";
-		d.getElementById('home1').style.display="inline-block";
-		d.getElementById('home').style.display="inline-block";
-		d.getElementById('replay').style.display="inline-block";
-		//aaa.init();
-		gm.send(0);
-		alert(gm.room);
-	}
-	d.getElementById('stop').onclick = function(){
-		
-		var set = d.getElementById('set');
-		if(set.style.display == "block") {
-			set.style.display = "none" ;
-			this.getElementsByTagName('i')[0].className = "icon-pause";
+var gm=new game(); 
+if(getQueryString("room") != null){
+	gm.room = getQueryString("room");
+	gm.send(1);
+}
+
+var d = document;
+function gd(id){return d.getElementById(id)||null;};
+function s(e,c){e.style.display="block";e.className = c}
+function h(e){var c = e.className;e.className = c.replace(/Show/, "Hide");}
+function aH(){var c=this.className;if(c.match(/Hide/)!=null){this.style.display = "none";this.className=c.replace(/Hide/, "Show")}}
+var height = d.documentElement.clientHeight;
+var width = d.documentElement.clientWidth;
+var cover = gd('cover'),setting = gd('set'),toplist = gd('toplist'),menu = gd('main');
+cover.addEventListener("webkitAnimationEnd",aH);
+setting.addEventListener("webkitAnimationEnd",aH);
+menu.addEventListener("webkitAnimationEnd",aH);
+cover.style.height = height + 'px';
+cover.onclick = function(){
+	h(setting);h(cover);
+	toplist.style.display = "none" ;
+	var li = toplist.getElementsByTagName("li");
+	for(var i=0;i<li.length;i++)li[i].style.display = "none";
+	d.getElementById('stop').getElementsByTagName('i')[0].className = "icon-pause";
+}
+menu.style.marginTop = (height - 128) / 2 -106 +"px";
+gd('day').onclick = function(){
+		var body = document.body;
+		if(body.className == 'day') {
+			body.className="night";
+			this.getElementsByTagName('i')[0].className = 'icon-sun';
 		}
-		else 	{
-			set.style.display = "block";
-			cover.style.display = "block";
-			this.getElementsByTagName('i')[0].className = "icon-play";
+		else{
+			 body.className = 'day';
+			 this.getElementsByTagName('i')[0].className = 'icon-moon-inv';
 		}
+		//document.getElementById('set').style.display = "none";
+}
+gd('music').onclick = function(){
+		var i = this.getElementsByTagName('i')[0];
+		(i.className == 'icon-volume-off') ? i.className = 'icon-volume-down' : i.className = 'icon-volume-off';
+}
+gd('openset').onclick = function(){
+	if(setting.style.display == "block") h(setting);
+	else 	{
+		s(setting,"bShow");
+		s(cover,"oShow");
 	}
+}
+
+
+gd('start').onclick = function(){
+	gd('home1').style.display="inline-block";
+	gd('home').style.display="inline-block";
+	gd('replay').style.display="inline-block";
+	gm.send(0);
 	
-	d.getElementById('home').onclick = function(){
-				d.getElementById('main').style.display="block";
-				d.getElementById('game').style.display="none";
-				d.getElementById('replay').style.display="none";
-				d.getElementById('endgame').style.display="none";
-				this.style.display="none";
-				cover.click();
+}
+gd('stop').onclick = function(){
+	if(setting.style.display == "block") h(setting);
+	else 	{
+		s(setting,"bShow");
+		s(cover,"oShow");
+	}
+}
+
+d.getElementById('home').onclick = function(){
+			d.getElementById('main').style.display="block";
+			d.getElementById('game').style.display="none";
+			d.getElementById('replay').style.display="none";
+			d.getElementById('endgame').style.display="none";
+			this.style.display="none";
+			cover.click();
 }	
 d.getElementById('home1').onclick = function(){
-				d.getElementById('main').style.display="block";
-				d.getElementById('game').style.display="none";
-				d.getElementById('replay').style.display="none";
-				d.getElementById('endgame').style.display="none";
-				d.getElementById('home').style.display="none";
-				this.style.display="none";
-				cover.click();
+			d.getElementById('main').style.display="block";
+			d.getElementById('game').style.display="none";
+			d.getElementById('replay').style.display="none";
+			d.getElementById('endgame').style.display="none";
+			d.getElementById('home').style.display="none";
+			this.style.display="none";
+			cover.click();
 }	
 d.getElementById('replay').onclick = function(){
-	d.getElementById('endgame').style.display="none";
-	aaa.init();
+d.getElementById('endgame').style.display="none";
+aaa.init();
 }
 d.getElementById("top").onclick = function () {
-	    var lst = d.getElementById("toplist");
-	    cover.style.display = "block";
-	    lst.style.display = "block";
-	    lst.style.paddingTop = (height - 375) / 2 + 'px';
-	    var li = lst.getElementsByTagName("li");
-	    li[0].style.display = "block";
-	    var n = 0;
-	    var timer = setInterval(function () {
-	        n++;
-	        li[n].style.display = "block";
-	        if (n == 4) clearInterval(timer);
-	    }, 300);
-	}
+	var lst = d.getElementById("toplist");
+	cover.style.display = "block";
+	lst.style.display = "block";
+	lst.style.paddingTop = (height - 375) / 2 + 'px';
+	var li = lst.getElementsByTagName("li");
+	li[0].style.display = "block";
+	var n = 0;
+	var timer = setInterval(function () {
+		n++;
+		li[n].style.display = "block";
+		if (n == 4) clearInterval(timer);
+	}, 300);
+}
 
-		function getQueryString(name) {
-            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-            var r = window.location.search.substr(1).match(reg);
-            if (r != null)
-                return unescape(r[2]);
-            return null;
-        }
-	</script>
+	function getQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null)
+			return unescape(r[2]);
+		return null;
+	}
+</script>
 </body>
 </html>

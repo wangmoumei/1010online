@@ -54,14 +54,14 @@ game.createRoom = function(socket){
 	socket.on('create room', function(msg){
 		if(msg = 1){
 			
-			
-			var room = {name:"room" + that.rooNum,owner:socket,joner:null,turn:true};
-			that.Room[that.roomNum] = room;
-			that.gameLog[socket.id] = that.roomNum;
+			//var room = {name:"room" + that.rooNum,owner:socket,joner:null,turn:true};
+			//that.Room[that.roomNum] = room;
+			that.roomLog[socket.id] = "Game" + that.roomNum;
 			that.roomNum++;
-			socket.join(room.name,function(){
+			socket.join(that.roomLog[socket.id],function(){
 				console.log(socket.id + "创建了房间");
-				socket.emit('create room', that.gameLog[socket.id]);
+				console.log(that.roomLog);
+				socket.emit('create room', that.roomLog[socket.id]);
 				
 				
 			});
@@ -72,10 +72,10 @@ game.createRoom = function(socket){
 game.joinRoom = function(socket){
     var that = this;
 	socket.on('join room', function(msg){
-		console.log(socket.id + "加入了"+msg+"号房间");
-		that.Room[msg].joiner = socket;
-		that.gameLog[socket.id] = msg;
-		socket.join(that.Room[msg].name,function(){
+		console.log(socket.id + "加入了"+msg);
+		//that.Room[msg].joiner = socket;
+		that.roomLog[socket.id] = msg;
+		socket.join(msg,function(){
 			that.io.to(msg).emit('join room', msg);
 		});
 		
@@ -86,9 +86,9 @@ game.joinRoom = function(socket){
 game.gameStart = function(socket){
     var that = this;
 	socket.on('game start', function(msg){
-		if(socket.id == that.Room[msg].joiner.id)that.Room[msg].turn = false;	
+		//if(socket.id == that.Room[msg].joiner.id)that.Room[msg].turn = false;	
 		that.io.to(msg).emit('game start', msg);
-		console.log("房间号" + msg + "游戏开始");
+		console.log(msg + "游戏开始");
 		socket.emit('in turn', {type:false});
 	});
 
@@ -128,7 +128,14 @@ game.outTurn = function(socket){
 
 };
 game.disconnect = function(socket){
-    
+    var that = this;
+
+	socket.on('disconnect', function(){
+		
+		socket.leave(that.roomlog[socket.id]);
+		that.io.to(that.roomlog[socket.id]).emit('disconnect', "失去了与对方的链接");
+		delete that.roomlog[socket.id]; 
+	});
 
 };
 module.exports = game;
