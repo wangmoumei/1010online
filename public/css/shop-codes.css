@@ -17,3 +17,14 @@
 .icon-trophy:before { content: '\e80f'; } /* '' */
 .icon-users:before { content: '\e810'; } /* '' */
 .icon-stop:before { content: '\e811'; } /* '' */
+.icon-github-circled:before { content: '\e812'; } /* '' */
+.icon-chrome:before { content: '\e813'; } /* '' */
+.icon-mobile:before { content: '\e814'; } /* '' */
+.icon-chat:before { content: '\e815'; } /* '' */
+.icon-pin:before { content: '\e816'; } /* '' */
+.icon-gamepad:before { content: '\e817'; } /* '' */
+.icon-attention-circled:before { content: '\e818'; } /* '' */
+.icon-login:before { content: '\e819'; } /* '' */
+.icon-logout:before { content: '\e81a'; } /* '' */
+.icon-error-alt:before { content: '\e81b'; } /* '' */
+.icon-chart-bar:before { content: '\e81c'; } /* '' */

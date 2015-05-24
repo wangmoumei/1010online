@@ -18,21 +18,24 @@
 
 <body class="day">
 <div id="header">
-  <div id="showBODY" style=" position:fixed;left:0;top:0;"></div>
-  <span class="mine" id="score"></span><i class="icon-award"></i><span class="top" style="display:none">2000</span>
-  <div id="showZB"></div>
-  <div id="showOP"></div>
-  <div id="showBODY" style="position:fixed;left:0;top:0;"></div>
-  <div id="showCHECK" style="position:fixed;left:0;bottom:0;"></div>
+  <i class="icon-award"></i>
 </div>
-<div id="main" class="oShow">
-  <div class="start" id="start"> <i class="icon-play"></i> </div>
-  <ul class="btnbox">
-    <li id="openset"> <i class="icon-cog"></i> </li>
-    <li id="top"> <i class="icon-align-left"></i> </li>
-    <li> <i class="icon-star"></i> </li>
+<div id="main">
+	<div id="menu1" class="oShow">
+      <div class="start" id="start"> <i class="icon-play"></i> </div>
+      <ul class="btnbox">
+        <li id="openset"> <i class="icon-cog"></i> </li>
+        <li id="top"> <i class="icon-chart-bar"></i> </li>
+        <li id="about"> <i class="icon-star"></i> </li>
+      </ul>
+      <div class="start" id="random" style="background:#34c69f;"> <i class="icon-shuffle"></i> </div>
+  </div>
+  <ul id="menu2"  style="display:none">
+  	<li class=""> <i class="icon-award"></i>多人游戏 </li>
+    <li class=""> <i class="icon-login"></i>加入游戏 </li>
+    <li class=""> <i class="icon-gamepad"></i>单机游戏 </li>
   </ul>
-  <div class="start" id="random" style="background:#34c69f;"> <i class="icon-shuffle"></i> </div>
+  <div id="returnMenu" class="bShow" style="display:none"><i class="icon-home"></i></div>
 </div>
 <div id="game">
   <div id="stop"><i class="icon-pause"></i></div>
@@ -58,8 +61,8 @@
     </ul>
   </div>
 </div>
-<div id="toplist">
-  <p style="font-size:20px;text-align:center;color:#fff;padding-bottom:20px">排行榜</p>
+<div id="toplist" class="oShow">
+  <p style="font-size:20px;text-align:center;color:#fff;padding-bottom:20px">排行榜<span style="font-size:.6em">(目前还没有数据库)</span></p>
   <ul>
     <li><span>1</span> <span>某某某</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
     <li><span>2</span> <span>某某某</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
@@ -67,6 +70,13 @@
     <li><span>4</span> <span>某某某</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
     <li><span>5</span> <span>某某某</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
   </ul>
+</div>
+<div id="aboutbox" class="oShow">
+	<div class="content">
+    	<div style="text-align:center;font-size:2em"><i class="icon-trophy"></i></div>
+        <p>关于游戏：</p>
+        <p style="text-align:center">开放源码，见托管项目<br><a href="#" ><i class="icon-github-circled"></i>Github</a></p>
+    </div>
 </div>
 <div id="cover" class="oShow"> </div>
 <div id="set">
@@ -86,24 +96,33 @@ if(getQueryString("room") != null){
 
 var d = document;
 function gd(id){return d.getElementById(id)||null;};
-function s(e,c){e.style.display="block";e.className = c}
-function h(e){var c = e.className;e.className = c.replace(/Show/, "Hide");}
+function s(e,c){e.style.display="block";e.className = c;c = e.className;e.className = c.replace(/Hide/, "Show");}
+function h(e,time){var c = e.className;e.className = c.replace(/Show/, "Hide");setTimeout(function(){e.style.display = "none"},time||600)};
 function aH(){var c=this.className;if(c.match(/Hide/)!=null){this.style.display = "none";this.className=c.replace(/Hide/, "Show")}}
 var height = d.documentElement.clientHeight;
 var width = d.documentElement.clientWidth;
-var cover = gd('cover'),setting = gd('set'),toplist = gd('toplist'),menu = gd('main');
+var cover = gd('cover'),setting = gd('set'),toplist = gd('toplist'),menu = gd('main'),about = gd("aboutbox")
+,menu1 = gd("menu1"),menu2 = gd("menu2"),toHome = gd("returnMenu");
 cover.addEventListener("webkitAnimationEnd",aH);
 setting.addEventListener("webkitAnimationEnd",aH);
 menu.addEventListener("webkitAnimationEnd",aH);
+about.addEventListener("webkitAnimationEnd",aH);
 cover.style.height = height + 'px';
+menu.style.marginTop = (height - 128) / 2 -106 +"px";
+toplist.style.marginTop = (height - 375) / 2 + 'px';
+
 cover.onclick = function(){
-	h(setting);h(cover);
-	toplist.style.display = "none" ;
+	h(setting);h(cover);h(about);h(toplist);
 	var li = toplist.getElementsByTagName("li");
 	for(var i=0;i<li.length;i++)li[i].style.display = "none";
 	d.getElementById('stop').getElementsByTagName('i')[0].className = "icon-pause";
 }
-menu.style.marginTop = (height - 128) / 2 -106 +"px";
+toHome.onclick = function(){
+	h(menu2);h(this);
+	setTimeout(function(){
+		s(menu1,"oShow");
+	},600);
+}
 gd('day').onclick = function(){
 		var body = document.body;
 		if(body.className == 'day') {
@@ -127,13 +146,24 @@ gd('openset').onclick = function(){
 		s(cover,"oShow");
 	}
 }
-
+gd("about").onclick = function(){
+	if(about.style.display == "block") h(about);
+	else 	{
+		s(about,"oShow");
+		s(cover,"oShow");
+	}
+}
 
 gd('start').onclick = function(){
 	gd('home1').style.display="inline-block";
 	gd('home').style.display="inline-block";
 	gd('replay').style.display="inline-block";
-	gm.send(0);
+	//gm.send(0);
+	h(menu1);
+	setTimeout(function(){
+		s(menu2,"oShow");
+		s(toHome,"bShow");
+	},600);
 	
 }
 gd('stop').onclick = function(){
@@ -161,16 +191,13 @@ d.getElementById('home1').onclick = function(){
 			this.style.display="none";
 			cover.click();
 }	
-d.getElementById('replay').onclick = function(){
-d.getElementById('endgame').style.display="none";
-aaa.init();
+gd('replay').onclick = function(){
+	gd('endgame').style.display="none";
+	//aaa.init();
 }
-d.getElementById("top").onclick = function () {
-	var lst = d.getElementById("toplist");
-	cover.style.display = "block";
-	lst.style.display = "block";
-	lst.style.paddingTop = (height - 375) / 2 + 'px';
-	var li = lst.getElementsByTagName("li");
+gd("top").onclick = function () {
+	s(cover,"oShow");s(toplist,"oShow");
+	var li = toplist.getElementsByTagName("li");
 	li[0].style.display = "block";
 	var n = 0;
 	var timer = setInterval(function () {
