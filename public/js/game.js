@@ -3,7 +3,7 @@ function game(){
 		var d=document;
 		this.socket = null;
 		this.gamenum = 0;
-		this.turn = false;
+		this.turn = 1;
 		this.type=1;this.room = "null";
 		this.gamebody = d.getElementById('gamebody');
 		this.scorebox = d.getElementById('score');
@@ -190,7 +190,7 @@ function game(){
 			function movestart(e){
 				e.preventDefault();
 				if(e.changedTouches){e=e.changedTouches[e.changedTouches.length-1];}
-				if(!obj.turn) return;
+				if(obj.turn!=0) return;
 				if(!mosedown){
 					mosedown = true;
 					var x = e.clientX  || e.pageX , y = e.clientY  || e.pageY;
@@ -228,7 +228,7 @@ function game(){
 			function moveend(e){
 				e.preventDefault();
 				if(e.changedTouches){e=e.changedTouches[e.changedTouches.length-1];}
-				if(!mosedown || !obj.turn) return;
+				if(!mosedown || obj.turn!=0) return;
 				mosedown = false;
 				var x = e.clientX  || e.pageX, y = e.clientY  || e.pageY;
 				x-=obj.game.offsetLeft;y-=obj.game.offsetTop
@@ -512,7 +512,7 @@ function game(){
 						break;	
 					case 5:
 						//out turn
-						obj.turn = false;
+						obj.turn = 1;
 						obj.socket.emit('out turn', {room:obj.room,opt:obj.body});
 						break;	
 					case 6:
@@ -542,7 +542,7 @@ function game(){
 				obj.socket.on('in turn', function(msg) {
 					//
 					if(mst.type)bodyinit(msg.body);
-					obj.turn = true;
+					obj.turn = 0;
 					obj.send(3);
 					obj.ul[1].style.display = "none";
 					obj.ul[0].style.display = "block";

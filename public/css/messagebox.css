@@ -1,14 +1,17 @@
 ﻿@charset "utf-8";
 #ScreenCover{width:100%;background-color:rgba(0,0,0,.3);position:fixed;top:0;left:0;z-index:999}
-#MessageBox{position:fixed;width:200px;border-radius:10px;background-color:#fff;}
-#MessageContent{text-align:center;padding:20px;font-size:14px;word-break:break-all}
+#Mes-Box{position:fixed;width:200px;border-radius:10px;background-color:#fff;}
+#Mes-Content{text-align:center;padding:20px;font-size:14px;word-break:break-all}
 #Mes-Btn{border-top:1px solid #ccc;display:box;display:-moz-box;display:-webkit-box;display:-ms-box;display:flex;display:-webkit-flex;}
 #Mes-Btn a{outline:0;display:block;outline:0;color:#00C;text-align:center;padding:10px 0;box-flex:1;-webkit-box-flex:1;-moz-box-flex:1;-ms-box-flex:1;-webkit-flex:1;flex:1;border-left:1px solid #ccc;cursor:pointer;font-size:14px;font-weight:300;}
 #Mes-Btn a:first-of-type{border-left:none;}
-#Exit{width:100%;}
+#Mes-Exit{width:100%;}
 .Mes-Fill{box-sizing:border-box;outline:0;width:100%;height:68px;line-height:20px;border:1px solid #dfdfdd;border-radius:3px}
+#Not-box{position:fixed;top:20px;left:0;width:100%;z-index:999}#Not-box li{overflow:hidden}
+#Not-box .Not-box{width:200px;background:rgba(0,0,0,.7);margin:5px auto;font-size:12px;color:#fff;text-align:center;padding:5px;border-radius:5px;box-shadow:1px 2px 1px 0px rgba(0,0,0,.3)}
 .showMes{-webkit-animation: 1s showMes ease;-moz-animation: 1s showMes ease;animation: 1s showMes ease;}
 .hideMes{-webkit-animation: .6s hideMes ease;-moz-animation: .6s hideMes ease;animation: .6s hideMes ease;}
+.hideNot{-webkit-animation: .6s hideNot ease;-moz-animation: .6s hideNot ease;animation: .6s hideNot ease;}
 @-webkit-keyframes showMes {
   0% { opacity:0 }
   100% { opacity:1 }
@@ -32,4 +35,16 @@
 @keyframes hideMes{
   0% { opacity:1 }
   100% { opacity:0 }
+}
+@-webkit-keyframes hideNot{
+  0% { opacity:1;height:38px;}
+  100% { opacity:0;height:0}
+}
+@-moz-keyframes hideNot {
+  0% { opacity:1;height:38px}
+  100% { opacity:0;height:0}
+}
+@keyframes hideNot{
+  0% { opacity:1;height:38px}
+  100% { opacity:0;height:0}
 }

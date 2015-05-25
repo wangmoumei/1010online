@@ -52,6 +52,7 @@ body.day {
 	font-size: 30px;
 }
 #menu2 li{
+	position:relative;
 	text-align:center;
 	border-radius:10px;
 	height:60px;
@@ -215,6 +216,7 @@ body.day {
 	padding-top: 20px;
 }
 #toplist li {
+	font-size:.8em;
 	width: 90%;
 	max-width: 500px;
 	text-align: center;
@@ -223,9 +225,6 @@ body.day {
 	margin: 3px auto;
 	border-radius: 10px;
 	position: relative;
-	-webkit-animation: 1s top;
-	-moz-animation: 1s top;
-	animation: 1s top;
 	display: none;
 	box-shadow: 1px 1px 3px rgba(0,0,0,.5);
 }

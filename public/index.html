@@ -64,11 +64,11 @@
 <div id="toplist" class="oShow">
   <p style="font-size:20px;text-align:center;color:#fff;padding-bottom:20px">排行榜<span style="font-size:.6em">(目前还没有数据库)</span></p>
   <ul>
-    <li><span>1</span> <span>某某某</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
-    <li><span>2</span> <span>某某某</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
-    <li><span>3</span> <span>某某某</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
-    <li><span>4</span> <span>某某某</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
-    <li><span>5</span> <span>某某某</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
+    <li><span>1</span> <span>Mr.Wang</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
+    <li><span>2</span> <span>小明	</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
+    <li><span>3</span> <span>小红</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
+    <li><span>4</span> <span>小刚</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
+    <li><span>5</span> <span>小明的爸小花</span> <span>111</span> <span>2015-3-11 15:00:00</span></li>
   </ul>
 </div>
 <div id="aboutbox" class="oShow">
@@ -98,6 +98,24 @@ var d = document;
 function gd(id){return d.getElementById(id)||null;};
 function s(e,c){e.style.display="block";e.className = c;c = e.className;e.className = c.replace(/Hide/, "Show");}
 function h(e,time){var c = e.className;e.className = c.replace(/Show/, "Hide");setTimeout(function(){e.style.display = "none"},time||600)};
+function sul(ul,c,t){
+	if(typeof c == 'number'){t=c;c=null;}
+	ul.style.display = "block";
+	ul.style.height = ul.clientHeight + "px";
+	var lst = ul.getElementsByTagName("li");
+	for(var i=0;i<lst.length;i++)lst[i].style.display = "none";
+	var i = 0;
+	lst[i].style.display = "block";
+	lst[i].className = c||"oShow";
+	var timer = setInterval(function(){
+		i++;
+		if(i>=lst.length) clearInterval(timer);
+		else{
+			lst[i].style.display = "block";
+			lst[i].className = c||"oShow";
+		}
+	},t||300);
+}
 function aH(){var c=this.className;if(c.match(/Hide/)!=null){this.style.display = "none";this.className=c.replace(/Hide/, "Show")}}
 var height = d.documentElement.clientHeight;
 var width = d.documentElement.clientWidth;
@@ -161,10 +179,9 @@ gd('start').onclick = function(){
 	//gm.send(0);
 	h(menu1);
 	setTimeout(function(){
-		s(menu2,"oShow");
+		sul(menu2,"lShow",200);s(menu2,"oShow");
 		s(toHome,"bShow");
 	},600);
-	
 }
 gd('stop').onclick = function(){
 	if(setting.style.display == "block") h(setting);
@@ -196,15 +213,7 @@ gd('replay').onclick = function(){
 	//aaa.init();
 }
 gd("top").onclick = function () {
-	s(cover,"oShow");s(toplist,"oShow");
-	var li = toplist.getElementsByTagName("li");
-	li[0].style.display = "block";
-	var n = 0;
-	var timer = setInterval(function () {
-		n++;
-		li[n].style.display = "block";
-		if (n == 4) clearInterval(timer);
-	}, 300);
+	s(cover,"oShow");s(toplist,"oShow");sul(toplist.getElementsByTagName("ul")[0],"lShow");
 }
 
 	function getQueryString(name) {
