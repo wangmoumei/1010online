@@ -1,12 +1,5 @@
 @charset "utf-8";
-* {
-	padding: 0;
-	margin: 0;
-	font-family: 微软雅黑
-}
-li {
-	list-style: none
-}
+* {padding: 0;margin: 0;font-family: 微软雅黑}li{list-style: none}a{color:#333;}
 body{transition:background-color 1s ease-in;font-size:20px;}
 body.night {
 	background: #232323
@@ -41,17 +34,18 @@ body.day {
 	position:relative;
 }
 #menu1,#menu2{ width:170px;margin:0 auto}
-#main  .start {
-	background: #98dc55;
+#main #menu1 div {
+	transition:background-color .3s ease-in;
 	height: 70px;
 	line-height: 70px;
 	text-align: center;
 	border-radius: 10px;
 }
-#main .start i {
-	font-size: 30px;
-}
+#main #menu1 div:nth-of-type(1){background: #98dc55;}
+#main #menu1 div:nth-of-type(2){background: #34c69f;}
+#main  #menu1 div i {font-size: 30px;}
 #menu2 li{
+	transition:background-color .3s ease-in;
 	position:relative;
 	text-align:center;
 	border-radius:10px;
@@ -64,6 +58,7 @@ body.day {
 #menu2 li:nth-of-type(2){background:#3598dc}
 #menu2 li:nth-of-type(3){background:#2fcc71}
 #returnMenu{
+	transition:background-color .3s ease-in;
 	width:50px;height:50px;line-height:48px;
 	background:#e84c3d;
 	text-align:center;
@@ -83,6 +78,7 @@ body.day {
 	display: -webkit-flex;
 }
 #main .btnbox li {
+	transition:background-color .3s ease-in;
 	box-flex: 1;
 	-webkit-box-flex: 1;
 	-moz-box-flex: 1;
@@ -98,6 +94,7 @@ body.day {
 #main .btnbox li:nth-of-type(1) {background: #ffc63e}
 #main .btnbox li:nth-of-type(2) {margin: 0 5px;background: #7d8ed4;}
 #main .btnbox li:nth-of-type(3) {background: #ed954b}
+#main  #menu1 div:hover,#menu2 li:hover,#main .btnbox li:hover,#returnMenu:hover{background:#54d5eb;transition:background-color .5s ease-in;}
 #set {
 	display: none;
 	position: fixed;
