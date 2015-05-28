@@ -4,7 +4,8 @@ function game(){
 		this.socket = null;
 		this.gamenum = 0;
 		this.turn = 1;
-		this.type=1;this.room = "null";
+		this.type=1;
+		this.room = "null";
 		this.gamebody = d.getElementById('gamebody');
 		this.scorebox = d.getElementById('score');
 		this.game = d.getElementById('game');
@@ -194,7 +195,6 @@ function game(){
 				if(!mosedown){
 					mosedown = true;
 					var x = e.clientX  || e.pageX , y = e.clientY  || e.pageY;
-					//document.getElementById('showZB').innerHTML = x + " || " + y + "||" +obj.game.offsetLeft + "||" +obj.game.offsetTop ;
 					if(this.id == "option1") obj.opnum = 0;
 					else if(this.id == "option2") obj.opnum = 1;
 					else if(this.id == "option3") obj.opnum = 2;
@@ -218,9 +218,7 @@ function game(){
 				if(mosedown){
 					var x = e.clientX  || e.pageX, 
 					y = e.clientY  || e.pageY ;
-					obj.send(4,{x:x,y:y});
-					//document.getElementById('showZB').innerHTML =(x-3*obj.size) + " || " + (y-3*obj.size) + "||" +obj.game.offsetLeft + "||" +obj.game.offsetTop ;
-					obj.option[obj.opnum].e
+					if(obj.type) obj.send(4,{x:x,y:y});
 					obj.option[obj.opnum].e.style.left = x - obj.game.offsetLeft - obj.size *2 + 'px';
 					obj.option[obj.opnum].e.style.top = y - obj.game.offsetTop - obj.size *2 + 'px'; 
 				}
@@ -236,7 +234,7 @@ function game(){
 				var row = Math.round((y-2*obj.size)/obj.size);
 				//obj.shape[obj.option[obj.opnum].shape]
 				if(obj.check(col,row)){
-					obj.option[obj.opnum].e.innerHTML="";obj.option[obj.opnum].shape = -1;
+					obj.option[obj.opnum].e.innerHTML="";obj.option[obj.opnum].shape = -1;obj.opnum=-1;
 					obj.scorebox.innerHTML = obj.score;
 					for(var i = 0 ;i<4;i++){
 						for(var j=0;j<4;j++)
@@ -252,16 +250,12 @@ function game(){
 					if(obj.option[0].e.innerHTML=="" && obj.option[1].e.innerHTML=="" &&obj.option[2].e.innerHTML=="")
 						obj.random();
 					if(obj.checkend()){
-						//cover.click();
-						//cover.style.display = "block";
 						document.getElementById('endgame').style.display="block";
-						var endbox = document.getElementById('endgame').getElementsByTagName("div")[0];
-						endbox.style.padding=(height-90)/2+"px 0" ;
+						
 					}
 				}
-				
-				//document.getElementById('showZB').innerHTML = (x-3*obj.size) + " || " + (y-3*obj.size)+ "||" +col+ "||" +row ;
 				obj.opinit();
+				if(obj.type) obj.send(4,{x:x,y:y});
 			}
 			
 		}
@@ -491,6 +485,8 @@ function game(){
 						//创建游戏
 						obj.socket = io();
 						obj.receive();
+					case 7:
+						//再次游戏
 						obj.socket.emit('create room', obj.type);
 						break;	
 					case 1:
@@ -517,7 +513,7 @@ function game(){
 						break;	
 					case 6:
 						//游戏结束
-						break;	
+						break;
 				}
 			}
 			this.receive = function(){

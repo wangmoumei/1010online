@@ -43,7 +43,7 @@ body.day {
 }
 #main #menu1 div:nth-of-type(1){background: #98dc55;}
 #main #menu1 div:nth-of-type(2){background: #34c69f;}
-#main  #menu1 div i {font-size: 30px;}
+#main  #menu1 div {font-size: 30px;}
 #menu2 li{
 	transition:background-color .3s ease-in;
 	position:relative;
@@ -126,9 +126,6 @@ body.day {
 	top: 0px;
 	width: 100%;
 	height: 100%;
-	-webkit-animation: 1s endgame;
-	-moz-animation: 1s endgame;
-	animation: 1s endgame;
 }
 #endgame .end {
 	margin: 0 auto;
@@ -174,9 +171,6 @@ body.day {
 	margin: 0 auto;
 	display: none;
 	position: relative;
-	-webkit-animation: 1s game;
-	-moz-animation: 1s game;
-	animation: 1s game;
 }
 .gamebody {
 	position: relative;

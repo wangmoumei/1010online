@@ -30,7 +30,7 @@
 	}
 	w.promptbox = function(str,fun){
 		addscreen();
-		d.getElementById('Mes-Content').innerHTML = '<textarea id="Mes-Var" class="Mes-Fill" placeholder="'+str+'"/>';
+		d.getElementById('Mes-Content').innerHTML = '<input type="text" id="Mes-Var" class="Mes-Fill" placeholder="'+str+'"/>';
 		d.getElementById('Mes-Btn').innerHTML = '<a id="Mes-Exit">取消</a><a id="Mes-Ensure">提交</a>';
 		bind();
 		d.getElementById('Mes-Ensure').onclick = function(){

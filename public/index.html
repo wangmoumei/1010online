@@ -22,23 +22,24 @@
 </div>
 <div id="main">
 	<div id="menu1" class="oShow">
-      <div id="start"> <i class="icon-play"></i> </div>
+      <div id="start" class="icon-play"></div>
       <ul class="btnbox">
-        <li id="openset"> <i class="icon-cog"></i> </li>
-        <li id="top"> <i class="icon-chart-bar"></i> </li>
-        <li id="about"> <i class="icon-star"></i> </li>
+        <li id="openset" class="icon-cog"></li>
+        <li id="top" class="icon-chart-bar"></li>
+        <li id="about" class="icon-star"></li>
       </ul>
-      <div id="random"> <i class="icon-shuffle"></i> </div>
+      <div id="random" class="icon-shuffle"></div>
   </div>
   <ul id="menu2"  style="display:none">
-  	<li class=""> <i class="icon-award"></i>多人游戏 </li>
-    <li class=""> <i class="icon-login"></i>加入游戏 </li>
-    <li class=""> <i class="icon-gamepad"></i>单机游戏 </li>
+  	<li id="multi"> <i class="icon-award"></i>多人游戏 </li>
+    <li id="join"> <i class="icon-login"></i>加入游戏 </li>
+    <li id="single"> <i class="icon-gamepad"></i>单机游戏 </li>
   </ul>
+  
   <div id="returnMenu" class="bShow" style="display:none"><i class="icon-home"></i></div>
 </div>
 <div id="game">
-  <div id="stop"><i class="icon-pause"></i></div>
+  <div id="pause"><i class="icon-pause"></i></div>
   <div class="gamebody" id="gamebody"> <i></i> </div>
   <ul class="chosen-list">
     <li id="option1"> </li>
@@ -56,7 +57,7 @@
   <div class="end">
     <div id="tip">最终分数</div>
     <ul class="endlist">
-      <li id="home1" style="display:none"><i class="icon-home"></i></li>
+      <li id="home" style="display:none"><i class="icon-home"></i></li>
       <li id="replay" style="display:inline-block"><i class="icon-cw"></i></li>
     </ul>
   </div>
@@ -81,7 +82,7 @@
 <div id="cover" class="oShow"> </div>
 <div id="set">
   <ul class="setlist">
-    <li id="home" style="display:none"><i class="icon-home"></i></li>
+    <li id="logout" style="display:none"><i class="icon-logout"></i></li>
     <li id="day"><i class="icon-moon-inv"></i></li>
     <li id="music"><i class="icon-volume-off"></i></li>
   </ul>
@@ -97,7 +98,7 @@ if(getQueryString("room") != null){
 var d = document;
 function gd(id){return d.getElementById(id)||null;};
 function s(e,c){e.style.display="block";e.className = c;c = e.className;e.className = c.replace(/Hide/, "Show");}
-function h(e,time){var c = e.className;e.className = c.replace(/Show/, "Hide");setTimeout(function(){e.style.display = "none"},time||600)};
+function h(e,time){var c = e.className;e.className = c.replace(/Show/, "Hide");setTimeout(function(){e.style.display = "none";e.className=e.className.replace(/Hide/, "Show")},time||600)};
 function sul(ul,c,t){
 	if(typeof c == 'number'){t=c;c=null;}
 	ul.style.display = "block";
@@ -119,110 +120,128 @@ function sul(ul,c,t){
 function aH(){var c=this.className;if(c.match(/Hide/)!=null){this.style.display = "none";this.className=c.replace(/Hide/, "Show")}}
 var height = d.documentElement.clientHeight;
 var width = d.documentElement.clientWidth;
-var cover = gd('cover'),setting = gd('set'),toplist = gd('toplist'),menu = gd('main'),about = gd("aboutbox")
-,menu1 = gd("menu1"),menu2 = gd("menu2"),toHome = gd("returnMenu");
+var cover = gd('cover'),setting = gd('set'),toplist = gd('toplist'),about = gd("aboutbox"),menu = gd('main'),menu1 = gd("menu1"),menu2 = gd("menu2"),
+toHome = gd("returnMenu"),gameMain=gd("game"),gameEnd = gd("endgame"),logout = gd("logout"),pause = gd("pause");
 cover.addEventListener("webkitAnimationEnd",aH);
 setting.addEventListener("webkitAnimationEnd",aH);
 menu.addEventListener("webkitAnimationEnd",aH);
 about.addEventListener("webkitAnimationEnd",aH);
 cover.style.height = height + 'px';
 menu.style.marginTop = (height - 128) / 2 -106 +"px";
-toplist.style.marginTop = (height - 375) / 2 + 'px';
-
+toplist.style.marginTop = (height - 420) / 2 + 'px';
+gameEnd.getElementsByTagName("div")[0].style.marginTop=(height-90)/2+"px";
 cover.onclick = function(){
 	h(setting);h(cover);h(about);h(toplist);
-	var li = toplist.getElementsByTagName("li");
-	for(var i=0;i<li.length;i++)li[i].style.display = "none";
-	d.getElementById('stop').getElementsByTagName('i')[0].className = "icon-pause";
-}
-toHome.onclick = function(){
-	h(menu2);h(this);
-	setTimeout(function(){
-		s(menu1,"oShow");
-	},600);
-}
-gd('day').onclick = function(){
-		var body = document.body;
-		if(body.className == 'day') {
-			body.className="night";
-			this.getElementsByTagName('i')[0].className = 'icon-sun';
-		}
-		else{
-			 body.className = 'day';
-			 this.getElementsByTagName('i')[0].className = 'icon-moon-inv';
-		}
-		//document.getElementById('set').style.display = "none";
-}
-gd('music').onclick = function(){
-		var i = this.getElementsByTagName('i')[0];
-		(i.className == 'icon-volume-off') ? i.className = 'icon-volume-down' : i.className = 'icon-volume-off';
-}
-gd('openset').onclick = function(){
+	pause.getElementsByTagName('i')[0].className = "icon-pause";
+};
+//主界面
+menu.addEventListener("click",
+ function(event){
+	 var t = event.target;
+	 t = (t.tagName=="I")?t.parentNode:t;
+	switch(t.id){
+		case "returnMenu":
+			h(menu2);h(toHome);
+			setTimeout(function(){
+				s(menu1,"oShow");
+			},600);
+			break;	
+		case "about":
+			if(about.style.display == "block") h(about);
+			else 	{
+				s(about,"oShow");
+				s(cover,"oShow");
+			}
+			break;
+		case "openset":
+			if(setting.style.display == "block") h(setting);
+			else 	{
+				s(setting,"bShow");
+				s(cover,"oShow");
+			}
+			break;
+		case "top":
+			s(cover,"oShow");s(toplist,"oShow");
+			sul(toplist.getElementsByTagName("ul")[0],"lShow");
+			break;
+		case "start":
+			h(menu1);
+			setTimeout(function(){
+				sul(menu2,"lShow",200);s(menu2,"oShow");
+				s(toHome,"bShow");
+			},600);
+			break;
+	}
+});
+//设置菜单
+setting.addEventListener("click",
+ function(event){
+	 var t = event.target;
+	 t = (t.tagName=="I")?t.parentNode:t;
+	switch(t.id){
+		case "day":
+			var b = document.body;
+			if(b.className == 'day') {
+				b.className="night";
+				t.getElementsByTagName('i')[0].className = 'icon-sun';
+			}
+			else{
+				 b.className = 'day';
+				 t.getElementsByTagName('i')[0].className = 'icon-moon-inv';
+			}
+			break;
+			case "music":
+				var i = t.getElementsByTagName('i')[0];
+				(i.className == 'icon-volume-off') ? i.className = 'icon-volume-down' : i.className = 'icon-volume-off';
+			break;
+			case "logout":
+			confirmbox("确定要退出这场游戏吗",function(){
+				h(cover);h(setting);
+				setTimeout(function(){
+					goMenu();
+				},600);
+			});
+			break;
+	}
+});
+//游戏结束菜单
+gameEnd.addEventListener("click",
+ function(event){
+	 var t = event.target;
+	 t = (t.tagName=="I")?t.parentNode:t;
+	switch(t.id){
+			case "home":
+			h(gameEnd);
+			setTimeout(function(){
+				goMenu();
+			},600);
+			break;
+			case "replay":
+			h(gameEnd);
+			break;
+	}
+});
+pause.onclick = function(){
 	if(setting.style.display == "block") h(setting);
 	else 	{
 		s(setting,"bShow");
 		s(cover,"oShow");
 	}
 }
-gd("about").onclick = function(){
-	if(about.style.display == "block") h(about);
-	else 	{
-		s(about,"oShow");
-		s(cover,"oShow");
-	}
+function goMenu(){
+	s(menu,"oShow");s(menu1,"oShow");h(logout);	
 }
-
-gd('start').onclick = function(){
-	gd('home1').style.display="inline-block";
-	gd('home').style.display="inline-block";
-	gd('replay').style.display="inline-block";
-	//gm.send(0);
-	h(menu1);
-	setTimeout(function(){
-		sul(menu2,"lShow",200);s(menu2,"oShow");
-		s(toHome,"bShow");
-	},600);
+function gameStart(){
+	s(gameMain,"bShow");
+	logout.style.display="inline-block";
 }
-gd('stop').onclick = function(){
-	if(setting.style.display == "block") h(setting);
-	else 	{
-		s(setting,"bShow");
-		s(cover,"oShow");
-	}
+function getQueryString(name) {
+	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+	var r = window.location.search.substr(1).match(reg);
+	if (r != null)
+		return unescape(r[2]);
+	return null;
 }
-
-d.getElementById('home').onclick = function(){
-			d.getElementById('main').style.display="block";
-			d.getElementById('game').style.display="none";
-			d.getElementById('replay').style.display="none";
-			d.getElementById('endgame').style.display="none";
-			this.style.display="none";
-			cover.click();
-}	
-d.getElementById('home1').onclick = function(){
-			d.getElementById('main').style.display="block";
-			d.getElementById('game').style.display="none";
-			d.getElementById('replay').style.display="none";
-			d.getElementById('endgame').style.display="none";
-			d.getElementById('home').style.display="none";
-			this.style.display="none";
-			cover.click();
-}	
-gd('replay').onclick = function(){
-	gd('endgame').style.display="none";
-	//aaa.init();
-}
-gd("top").onclick = function () {
-	s(cover,"oShow");s(toplist,"oShow");sul(toplist.getElementsByTagName("ul")[0],"lShow");
-}
-
-	function getQueryString(name) {
-		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-		var r = window.location.search.substr(1).match(reg);
-		if (r != null)
-			return unescape(r[2]);
-		return null;
-	}
 </script>
 </body>
 </html>
