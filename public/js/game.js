@@ -521,6 +521,8 @@ function game(){
 					//创建一个房间后，获得房间号
 					obj.room = msg;
 					alertbox(msg);
+					if(obj.createRoom)
+						obj.createRoom(msg);
 				});
 				obj.socket.on('join room', function(msg) {
 					//加入一个房间后，游戏准备开始
@@ -554,7 +556,7 @@ function game(){
 				obj.socket.on('game end', function(msg) {
 					//游戏结束
 				});
-				obj.socket.on('disconnect', function(msg) {
+				obj.socket.on('logout', function(msg) {
 					//游戏结束
 					messagebox(msg);
 				});

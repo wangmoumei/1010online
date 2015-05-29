@@ -54,11 +54,11 @@ game.createRoom = function(socket){
 	socket.on('create room', function(msg){
 		if(msg = 1){
 			
-			//var room = {name:"room" + that.rooNum,owner:socket,joner:null,turn:true};
-			//that.Room[that.roomNum] = room;
-			that.roomLog[socket.id] = "Game" + that.roomNum;
+			var room = {name:"room" + that.rooNum,count:1};
+			that.Room[that.roomNum] = room;
+			that.roomLog[socket.id]=that.roomNum;
 			that.roomNum++;
-			socket.join(that.roomLog[socket.id],function(){
+			socket.join("Game" + that.roomLog[socket.id],function(){
 				console.log(socket.id + "创建了房间");
 				console.log(that.roomLog);
 				socket.emit('create room', that.roomLog[socket.id]);
@@ -129,12 +129,12 @@ game.outTurn = function(socket){
 };
 game.disconnect = function(socket){
     var that = this;
-
 	socket.on('disconnect', function(){
+		console.log(socket.id+"断开连接");
+		that.io.to(that.roomLog[socket.id]).emit('logout', "失去了与对方的连接");
+		socket.leave("Game" + that.roomLog[socket.id]);
+		delete that.roomLog[socket.id]; 
 		
-		socket.leave(that.roomlog[socket.id]);
-		that.io.to(that.roomlog[socket.id]).emit('disconnect', "失去了与对方的链接");
-		delete that.roomlog[socket.id]; 
 	});
 
 };

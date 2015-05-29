@@ -35,8 +35,15 @@
     <li id="join"> <i class="icon-login"></i>加入游戏 </li>
     <li id="single"> <i class="icon-gamepad"></i>单机游戏 </li>
   </ul>
-  
   <div id="returnMenu" class="bShow" style="display:none"><i class="icon-home"></i></div>
+</div>
+<div id="multiBox">
+	<div class="content"></div>
+    <ul class="btnbox">
+    	<li id="startGame"><i class="icon-play"></i></li>
+        <li><i class="icon-stop"></i></li>
+    </ul>
+    
 </div>
 <div id="game">
   <div id="pause"><i class="icon-pause"></i></div>
@@ -53,7 +60,7 @@
   </ul>
   <div id="optcover"></div>
 </div>
-<div id="endgame">
+<div id="endGame">
   <div class="end">
     <div id="tip">最终分数</div>
     <ul class="endlist">
@@ -89,11 +96,6 @@
 </div>
 
 <script>
-var gm=new game(); 
-if(getQueryString("room") != null){
-	gm.room = getQueryString("room");
-	gm.send(1);
-}
 
 var d = document;
 function gd(id){return d.getElementById(id)||null;};
@@ -121,7 +123,7 @@ function aH(){var c=this.className;if(c.match(/Hide/)!=null){this.style.display 
 var height = d.documentElement.clientHeight;
 var width = d.documentElement.clientWidth;
 var cover = gd('cover'),setting = gd('set'),toplist = gd('toplist'),about = gd("aboutbox"),menu = gd('main'),menu1 = gd("menu1"),menu2 = gd("menu2"),
-toHome = gd("returnMenu"),gameMain=gd("game"),gameEnd = gd("endgame"),logout = gd("logout"),pause = gd("pause");
+toHome = gd("returnMenu"),gameMain=gd("game"),gameEnd = gd("endGame"),logout = gd("logout"),pause = gd("pause"),multiBox = gd("multiBox");
 cover.addEventListener("webkitAnimationEnd",aH);
 setting.addEventListener("webkitAnimationEnd",aH);
 menu.addEventListener("webkitAnimationEnd",aH);
@@ -134,6 +136,16 @@ cover.onclick = function(){
 	h(setting);h(cover);h(about);h(toplist);
 	pause.getElementsByTagName('i')[0].className = "icon-pause";
 };
+var gm=new game(); 
+if(getQueryString("room") != null){
+	gm.room = getQueryString("room");
+	gm.send(1);
+}
+gm.createRoom = function(room){
+	multiBox.getElementsByClassName("tipbox")[0].innerHTML = "你的房间";
+	multiBox.getElementsByClassName("roombox")[0].innerHTML = room ;
+	multiBox.getElementsByClassName("tipbox")[1].innerHTML = "现在只有你一个人在线";
+}
 //主界面
 menu.addEventListener("click",
  function(event){
@@ -171,6 +183,18 @@ menu.addEventListener("click",
 				s(toHome,"bShow");
 			},600);
 			break;
+		case "multi":
+			s(multiBox,"oShow");
+			multiBox.getElementsByClassName("content")[0].innerHTML='<div class="tipbox"></div><div class="roombox"><div><i class="ajax-loader"></i></div></div><div class="tipbox">你的游戏正在创建...</div>';
+			gm.send(0);
+		break;
+		case "join":
+		
+		break;
+		case "single":
+		
+		break;
+			
 	}
 });
 //设置菜单
