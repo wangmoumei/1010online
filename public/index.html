@@ -40,7 +40,7 @@
 <div id="multiBox">
 	<div class="content"></div>
     <ul class="btnbox">
-    	<li id="startGame"><i class="icon-play"></i></li>
+    	<li id="startMulti" class="off"><i class="icon-play"></i></li>
         <li><i class="icon-stop"></i></li>
     </ul>
     
@@ -123,7 +123,7 @@ function aH(){var c=this.className;if(c.match(/Hide/)!=null){this.style.display 
 var height = d.documentElement.clientHeight;
 var width = d.documentElement.clientWidth;
 var cover = gd('cover'),setting = gd('set'),toplist = gd('toplist'),about = gd("aboutbox"),menu = gd('main'),menu1 = gd("menu1"),menu2 = gd("menu2"),
-toHome = gd("returnMenu"),gameMain=gd("game"),gameEnd = gd("endGame"),logout = gd("logout"),pause = gd("pause"),multiBox = gd("multiBox");
+toHome = gd("returnMenu"),gameMain=gd("game"),gameEnd = gd("endGame"),logout = gd("logout"),pause = gd("pause"),multiBox = gd("multiBox"),startMulti = gd("startMulti");
 cover.addEventListener("webkitAnimationEnd",aH);
 setting.addEventListener("webkitAnimationEnd",aH);
 menu.addEventListener("webkitAnimationEnd",aH);
@@ -131,6 +131,7 @@ about.addEventListener("webkitAnimationEnd",aH);
 cover.style.height = height + 'px';
 menu.style.marginTop = (height - 128) / 2 -106 +"px";
 toplist.style.marginTop = (height - 420) / 2 + 'px';
+multiBox.getElementsByClassName("content")[0].style.marginTop = (height - 180)/2 + "px";
 gameEnd.getElementsByTagName("div")[0].style.marginTop=(height-90)/2+"px";
 cover.onclick = function(){
 	h(setting);h(cover);h(about);h(toplist);
@@ -142,9 +143,8 @@ if(getQueryString("room") != null){
 	gm.send(1);
 }
 gm.createRoom = function(room){
-	multiBox.getElementsByClassName("tipbox")[0].innerHTML = "你的房间";
-	multiBox.getElementsByClassName("roombox")[0].innerHTML = room ;
-	multiBox.getElementsByClassName("tipbox")[1].innerHTML = "现在只有你一个人在线";
+	multiBox.getElementsByClassName("content")[0].innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+room+'</div><div class="tipbox">现在只有你一个人在线</div>';
+	startMulti.className = "off";
 }
 //主界面
 menu.addEventListener("click",
