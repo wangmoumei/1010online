@@ -88,5 +88,8 @@
 			}else if(this.className == "hideNot")
 				n.removeChild(this);
 		});
+		setTimeout(function(){
+			if(nn)n.removeChild(nn);
+		},5000);
 	}
 })()

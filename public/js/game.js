@@ -6,6 +6,7 @@ function game(){
 		this.turn = 1;
 		this.type=1;
 		this.room = "null";
+		this.num = 0;
 		this.gamebody = d.getElementById('gamebody');
 		this.scorebox = d.getElementById('score');
 		this.game = d.getElementById('game');
@@ -483,14 +484,18 @@ function game(){
 				{
 					case 0:
 						//创建游戏
-						obj.socket = io();
-						obj.receive();
-					case 7:
-						//再次游戏
+						if(!obj.socket){
+							obj.socket = io();
+							obj.receive();
+						}
 						obj.socket.emit('create room', obj.type);
 						break;	
 					case 1:
 						//加入游戏
+						if(!obj.socket){
+							obj.socket = io();
+							obj.receive();
+						}
 						obj.socket.emit('join room', obj.room);
 						break;	
 					case 2:
@@ -514,19 +519,24 @@ function game(){
 					case 6:
 						//游戏结束
 						break;
+					case 8:
+						//logout
+						obj.socket.emit('logout', null);
+						break;
 				}
 			}
 			this.receive = function(){
 				obj.socket.on('create room', function(msg) {
 					//创建一个房间后，获得房间号
 					obj.room = msg;
-					alertbox(msg);
 					if(obj.createRoom)
 						obj.createRoom(msg);
 				});
 				obj.socket.on('join room', function(msg) {
 					//加入一个房间后，游戏准备开始
-					obj.room = msg;
+					obj.num = msg;
+					if(gm.joinRoom)
+						gm.joinRoom(msg);
 				});
 				obj.socket.on('game start', function(msg) {
 					//游戏开始后，游戏初始化
@@ -558,7 +568,13 @@ function game(){
 				});
 				obj.socket.on('logout', function(msg) {
 					//游戏结束
-					messagebox(msg);
+					obj.num = msg;
+					if(gm.logout)
+						gm.logout(msg);
+				});
+				obj.socket.on('sys mes', function(msg) {
+					//游戏结束
+					noticebox(msg);
 				});
 			}
 }

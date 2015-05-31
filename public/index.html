@@ -41,7 +41,7 @@
 	<div class="content"></div>
     <ul class="btnbox">
     	<li id="startMulti" class="off"><i class="icon-play"></i></li>
-        <li><i class="icon-stop"></i></li>
+        <li id="logoutMulti"><i class="icon-stop"></i></li>
     </ul>
     
 </div>
@@ -123,7 +123,7 @@ function aH(){var c=this.className;if(c.match(/Hide/)!=null){this.style.display 
 var height = d.documentElement.clientHeight;
 var width = d.documentElement.clientWidth;
 var cover = gd('cover'),setting = gd('set'),toplist = gd('toplist'),about = gd("aboutbox"),menu = gd('main'),menu1 = gd("menu1"),menu2 = gd("menu2"),
-toHome = gd("returnMenu"),gameMain=gd("game"),gameEnd = gd("endGame"),logout = gd("logout"),pause = gd("pause"),multiBox = gd("multiBox"),startMulti = gd("startMulti");
+toHome = gd("returnMenu"),gameMain=gd("game"),gameEnd = gd("endGame"),logout = gd("logout"),pause = gd("pause"),multiBox = gd("multiBox"),startMulti = gd("startMulti"),logoutMulti = gd("logoutMulti"),multiContent =multiBox.getElementsByClassName("content")[0] ;
 cover.addEventListener("webkitAnimationEnd",aH);
 setting.addEventListener("webkitAnimationEnd",aH);
 menu.addEventListener("webkitAnimationEnd",aH);
@@ -139,12 +139,24 @@ cover.onclick = function(){
 };
 var gm=new game(); 
 if(getQueryString("room") != null){
-	gm.room = getQueryString("room");
+	gm.room = parseInt(getQueryString("room"));
 	gm.send(1);
 }
 gm.createRoom = function(room){
-	multiBox.getElementsByClassName("content")[0].innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+room+'</div><div class="tipbox">现在只有你一个人在线</div>';
+	multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+room+'</div><div class="tipbox">现在只有你一个人在线</div>';
 	startMulti.className = "off";
+}
+gm.joinRoom = function(num){
+	if(multiBox.style.display != "block") s(multiBox,"oShow");
+	multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+gm.room+'</div><div class="tipbox">现在有'+num+'人在线</div>';
+	if(num>=2)startMulti.className = "";
+}
+gm.logout = function(num){
+	if(num<2){
+		multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+gm.room+'</div><div class="tipbox">现在只有你一人在线</div>';
+		startMulti.className = "off";
+	}
+	else multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+gm.room+'</div><div class="tipbox">现在有'+num+'人在线</div>';
 }
 //主界面
 menu.addEventListener("click",
@@ -186,7 +198,8 @@ menu.addEventListener("click",
 		case "multi":
 			s(multiBox,"oShow");
 			multiBox.getElementsByClassName("content")[0].innerHTML='<div class="tipbox"></div><div class="roombox"><div><i class="ajax-loader"></i></div></div><div class="tipbox">你的游戏正在创建...</div>';
-			gm.send(0);
+			setTimeout(function(){gm.send(0);},1000);
+			
 		break;
 		case "join":
 		
@@ -243,6 +256,20 @@ gameEnd.addEventListener("click",
 			case "replay":
 			h(gameEnd);
 			break;
+	}
+});
+multiBox.addEventListener("click",
+ function(event){
+	 var t = event.target;
+	 t = (t.tagName=="I")?t.parentNode:t;
+	switch(t.id){
+		case "startMulti":
+		alert(111);
+		break;
+		case "logoutMulti":
+		gm.send(8);
+		h(multiBox);
+		break;
 	}
 });
 pause.onclick = function(){
