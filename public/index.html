@@ -43,7 +43,20 @@
     	<li id="startMulti" class="off"><i class="icon-play"></i></li>
         <li id="logoutMulti"><i class="icon-stop"></i></li>
     </ul>
-    
+</div>
+<div id="joinBox">
+	<form id="joinForm">
+	<div class="content">
+    	<div class="tipbox">输入</div>
+        <div style="text-align:center;">
+    		<input id="joinInput" type="text" placeholder="房间号">
+        </div>
+    </div>
+    <ul class="btnbox">
+    	<li id="joinRoom" class="off"><button class="icon-login"></button></li>
+        <li id="exitJoin"><i class="icon-stop"></i></li>
+    </ul>
+    </form>
 </div>
 <div id="game">
   <div id="pause"><i class="icon-pause"></i></div>
@@ -123,7 +136,7 @@ function aH(){var c=this.className;if(c.match(/Hide/)!=null){this.style.display 
 var height = d.documentElement.clientHeight;
 var width = d.documentElement.clientWidth;
 var cover = gd('cover'),setting = gd('set'),toplist = gd('toplist'),about = gd("aboutbox"),menu = gd('main'),menu1 = gd("menu1"),menu2 = gd("menu2"),
-toHome = gd("returnMenu"),gameMain=gd("game"),gameEnd = gd("endGame"),logout = gd("logout"),pause = gd("pause"),multiBox = gd("multiBox"),startMulti = gd("startMulti"),logoutMulti = gd("logoutMulti"),multiContent =multiBox.getElementsByClassName("content")[0] ;
+toHome = gd("returnMenu"),gameMain=gd("game"),gameEnd = gd("endGame"),logout = gd("logout"),pause = gd("pause"),multiBox = gd("multiBox"),startMulti = gd("startMulti"),logoutMulti = gd("logoutMulti"),multiContent =multiBox.getElementsByClassName("content")[0],joinBox = gd("joinBox"),joinInput = gd("joinInput") ;
 cover.addEventListener("webkitAnimationEnd",aH);
 setting.addEventListener("webkitAnimationEnd",aH);
 menu.addEventListener("webkitAnimationEnd",aH);
@@ -131,7 +144,8 @@ about.addEventListener("webkitAnimationEnd",aH);
 cover.style.height = height + 'px';
 menu.style.marginTop = (height - 128) / 2 -106 +"px";
 toplist.style.marginTop = (height - 420) / 2 + 'px';
-multiBox.getElementsByClassName("content")[0].style.marginTop = (height - 180)/2 + "px";
+multiContent.style.marginTop = (height - 180)/2 + "px";
+joinBox.style.paddingTop =  (height - 180)/2 + "px";
 gameEnd.getElementsByTagName("div")[0].style.marginTop=(height-90)/2+"px";
 cover.onclick = function(){
 	h(setting);h(cover);h(about);h(toplist);
@@ -143,10 +157,13 @@ if(getQueryString("room") != null){
 	gm.send(1);
 }
 gm.createRoom = function(room){
+	if(joinBox.style.display == "block") h(joinBox);
+	if(multiBox.style.display != "block") s(multiBox,"oShow");
 	multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+room+'</div><div class="tipbox">现在只有你一个人在线</div>';
 	startMulti.className = "off";
 }
 gm.joinRoom = function(num){
+	if(joinBox.style.display == "block") h(joinBox);
 	if(multiBox.style.display != "block") s(multiBox,"oShow");
 	multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+gm.room+'</div><div class="tipbox">现在有'+num+'人在线</div>';
 	if(num>=2)startMulti.className = "";
@@ -202,7 +219,8 @@ menu.addEventListener("click",
 			
 		break;
 		case "join":
-		
+			s(joinBox,"oShow");
+			joinInput.focus();
 		break;
 		case "single":
 		
@@ -272,6 +290,23 @@ multiBox.addEventListener("click",
 		break;
 	}
 });
+joinBox.addEventListener("click",
+ function(event){
+	 var t = event.target;
+	 t = (t.tagName=="I" || t.tagName == "BUTTON")?t.parentNode:t;
+	switch(t.id){
+		case "joinRoom":
+			if(joinInput.value){
+				gm.room = joinInput.value;
+				gm.send(1);
+			}
+		break;
+		case "exitJoin":
+		h(joinBox);
+		break;
+	}
+});
+gd("joinForm").onsubmit = function(){return false;}
 pause.onclick = function(){
 	if(setting.style.display == "block") h(setting);
 	else 	{

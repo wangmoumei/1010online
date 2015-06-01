@@ -63,7 +63,7 @@ game.createRoom = function(socket){
 			socket.join(that.roomLog[socket.id],function(){
 				console.log(socket.id + "创建了房间");
 				console.log(that.roomLog);
-				socket.emit('create room', that.roomLog[socket.id]);
+				socket.emit('create room', (that.roomNum-1));
 				
 				
 			});
@@ -74,24 +74,32 @@ game.createRoom = function(socket){
 game.joinRoom = function(socket){
     var that = this;var roomName = "";
 	socket.on('join room', function(msg){
-		if(typeof msg == 'string') roomName = msg;
-		else if(msg == "number") roomName = "Game"+msg;
+		var n = parseInt(msg);
+		if(n>=0) {roomName = "Game"+ n;}
+		else {roomName = msg;}
 		if(that.Room[roomName]){
 			console.log(socket.id + "加入了"+roomName);
 			that.io.to(roomName).emit('sys mes', "新玩家加入了" + roomName);
 			that.Room[roomName].count ++;
-			console.log(that.Room);
 			that.roomLog[socket.id] = roomName;
 			socket.join(roomName,function(){
-				that.io.to(roomName).emit('join room', that.Room[msg].count);
+				that.io.to(roomName).emit('join room', that.Room[roomName].count);
 				socket.emit('sys mes', "你加入了" + roomName);
 			});
 		}
 		else{
-			
-			
+			var room = {name:that.roomNum,count:1,status:false};
+			that.Room[roomName] = room;
+			that.roomLog[socket.id] = roomName;
+			that.roomNum++;
+			socket.join(roomName,function(){
+				console.log(socket.id + "加入游戏失败，创建了房间" + roomName);
+				socket.emit('create room', msg);
+				socket.emit('sys mes', "房间不存在，为你创建了游戏" + roomName);
+			});
 		}
-		
+		console.log(that.Room);
+		console.log(that.roomLog);
 	});
 
 };
@@ -142,13 +150,13 @@ game.outTurn = function(socket){
 game.logout = function(socket){
 	var that = this;
 	socket.on('logout', function(msg){
-		var roomNum = that.roomLog[socket.id];
-		console.log(socket.id+"离开房间" + "Game" + that.roomLog[socket.id]);
-		if(that.Room[roomNum]){
-			that.Room[roomNum].count --;
-			socket.leave("Game" + that.roomLog[socket.id]);
-			that.io.to("Game" +that.roomLog[socket.id]).emit('sys mes',"有人退出了你的游戏");
-			that.io.to("Game" +that.roomLog[socket.id]).emit('logout', that.Room[roomNum].count);
+		var room = that.roomLog[socket.id];
+		console.log(socket.id+"离开房间" + that.roomLog[socket.id]);
+		if(that.Room[room]){
+			that.Room[room].count --;
+			socket.leave(that.roomLog[socket.id]);
+			that.io.to(that.roomLog[socket.id]).emit('sys mes',"有人退出了你的游戏");
+			that.io.to(that.roomLog[socket.id]).emit('logout', that.Room[room].count);
 			delete that.roomLog[socket.id]; 
 		}
 	});
@@ -157,15 +165,15 @@ game.logout = function(socket){
 game.disconnect = function(socket){
     var that = this;
 	socket.on('disconnect', function(){
-		var roomNum = that.roomLog[socket.id];
+		var room = that.roomLog[socket.id];
 		console.log(socket.id+"断开连接");
-		console.log(that.Room);
-		if(that.Room[roomNum]){
-			that.Room[roomNum].count --;
-			that.io.to("Game" +that.roomLog[socket.id]).emit('logout', that.Room[roomNum].count);
-			that.io.to("Game" +that.roomLog[socket.id]).emit('sys mes', "失去了与对方的连接");
+		if(that.Room[room]){
+			that.Room[room].count --;
+			console.log(that.Room);
+			that.io.to(that.roomLog[socket.id]).emit('logout', that.Room[room].count);
+			that.io.to(that.roomLog[socket.id]).emit('sys mes', "失去了与对方的连接");
 			
-			socket.leave("Game" + that.roomLog[socket.id]);
+			socket.leave(that.roomLog[socket.id]);
 			delete that.roomLog[socket.id]; 
 		}
 	});
