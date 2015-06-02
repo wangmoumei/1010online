@@ -18,7 +18,9 @@
 
 <body class="day">
 <div id="header">
+<span id="score"></span>
   <i class="icon-award"></i>
+  
 </div>
 <div id="main">
 	<div id="menu1" class="oShow">
@@ -73,7 +75,7 @@
   </ul>
   <div id="optcover"></div>
 </div>
-<div id="endGame">
+<div id="endGame" style="display:none">
   <div class="end">
     <div id="tip">最终分数</div>
     <ul class="endlist">
@@ -174,6 +176,9 @@ gm.logout = function(num){
 		startMulti.className = "off";
 	}
 	else multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+gm.room+'</div><div class="tipbox">现在有'+num+'人在线</div>';
+}
+gm.gameStart = function(){
+	gameStart();
 }
 //主界面
 menu.addEventListener("click",
@@ -282,7 +287,7 @@ multiBox.addEventListener("click",
 	 t = (t.tagName=="I")?t.parentNode:t;
 	switch(t.id){
 		case "startMulti":
-		alert(111);
+		gm.send(2);
 		break;
 		case "logoutMulti":
 		gm.send(8);
@@ -318,7 +323,8 @@ function goMenu(){
 	s(menu,"oShow");s(menu1,"oShow");h(logout);	
 }
 function gameStart(){
-	s(gameMain,"bShow");
+	h(menu);
+	s(gameMain,"bShow");h(multiBox);h(joinBox);
 	logout.style.display="inline-block";
 }
 function getQueryString(name) {

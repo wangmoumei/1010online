@@ -3,7 +3,7 @@ function game(){
 		var d=document;
 		this.socket = null;
 		this.gamenum = 0;
-		this.turn = 1;
+		this.turn = -1;
 		this.type=1;
 		this.room = "null";
 		this.num = 0;
@@ -235,7 +235,7 @@ function game(){
 				var row = Math.round((y-2*obj.size)/obj.size);
 				//obj.shape[obj.option[obj.opnum].shape]
 				if(obj.check(col,row)){
-					obj.option[obj.opnum].e.innerHTML="";obj.option[obj.opnum].shape = -1;obj.opnum=-1;
+					obj.option[obj.opnum].e.innerHTML="";
 					obj.scorebox.innerHTML = obj.score;
 					for(var i = 0 ;i<4;i++){
 						for(var j=0;j<4;j++)
@@ -254,9 +254,12 @@ function game(){
 						document.getElementById('endgame').style.display="block";
 						
 					}
+					obj.option[obj.opnum].shape = -1;obj.opnum=-1;
+					if(obj.type){ obj.send(5);console.log(obj.turn);}
 				}
 				obj.opinit();
-				if(obj.type) obj.send(4,{x:x,y:y});
+				
+				
 			}
 			
 		}
@@ -435,8 +438,6 @@ function game(){
 					ilst[i].style.height = obj.opsize - 1 + 'px'; 
 				}
 			}
-			else
-			alert("没有选中目标");
 		};
 		this.fx=function(f,t,fn,end,tm,pow){
 			var D=Date;
@@ -500,21 +501,21 @@ function game(){
 						break;	
 					case 2:
 						//开始游戏
-						obj.socket.emit('game start', obj.room);
+						obj.socket.emit('game start', obj.turn);
 						break;	
 					case 3:
 						//in turn
 						opt = [{shape:obj.option[0].shape,color:obj.option[0].color},{shape:obj.option[1].shape,color:obj.option[1].color},{shape:obj.option[2].shape,color:obj.option[2].color}];
-						obj.socket.emit('in turn', {room:obj.room,opt:opt});
+						obj.socket.emit('in turn', opt);
 						break;	
 					case 4:
 						//move
-						obj.socket.emit('game run', {room:obj.room,opt:opt,opnum:obj.opnum});
+						obj.socket.emit('game run', {opt:opt,opnum:obj.opnum});
 						break;	
 					case 5:
 						//out turn
-						obj.turn = 1;
-						obj.socket.emit('out turn', {room:obj.room,opt:obj.body});
+						alert(111);
+						obj.socket.emit('out turn',obj.body);
 						break;	
 					case 6:
 						//游戏结束
@@ -529,39 +530,66 @@ function game(){
 				obj.socket.on('create room', function(msg) {
 					//创建一个房间后，获得房间号
 					obj.room = msg;
+					obj.turn = 1;
 					if(obj.createRoom)
 						obj.createRoom(msg);
 				});
 				obj.socket.on('join room', function(msg) {
 					//加入一个房间后，游戏准备开始
 					obj.num = msg;
-					if(gm.joinRoom)
-						gm.joinRoom(msg);
+					if(obj.turn<0)obj.turn = msg;
+					if(obj.joinRoom)
+						obj.joinRoom(msg);
 				});
 				obj.socket.on('game start', function(msg) {
 					//游戏开始后，游戏初始化
 					
+					if(obj.gameStart)obj.gameStart();
+					obj.init();
+					if(obj.turn > msg)
+						obj.turn --;
+					else if(msg == obj.turn){
+						obj.turn = 0;
+						obj.send(3);
+					}
 				});
 				obj.socket.on('game run', function(msg) {
 					//游戏进行中，获得对方信息
-					obj.option[(msg.opnum + 3)].e.style.left = msg.opt.x - obj.game.offsetLeft - obj.size *2 + 'px';
-					obj.option[(msg.opnum + 3)].e.style.top = msg.opt.y - obj.game.offsetTop - obj.size *2 + 'px'; 
+					if(obj.turn){
+						obj.option[(msg.opnum + 3)].e.style.left = msg.opt.x - obj.game.offsetLeft - obj.size *2 + 'px';
+						obj.option[(msg.opnum + 3)].e.style.top = msg.opt.y - obj.game.offsetTop - obj.size *2 + 'px'; 
+					}
 				});
 				obj.socket.on('in turn', function(msg) {
 					//
-					if(mst.type)bodyinit(msg.body);
-					obj.turn = 0;
-					obj.send(3);
-					obj.ul[1].style.display = "none";
-					obj.ul[0].style.display = "block";
+					obj.bodyinit(msg.body);
+					if(obj.turn){
+						obj.turn --;
+						if(!obj.turn){
+							obj.send(3);
+							obj.ul[1].style.display = "none";
+							obj.ul[0].style.display = "block";
+						}
+					}
+					else 
+						obj.turn = obj.num-1;
+					console.log(obj.turn);
 				});
 				obj.socket.on('out turn', function(msg) {
 					//msg 选项初始化
-					obj.ul[0].style.display = "none";
-					obj.ul[1].style.display = "block";
-					obj.reset(3,msg.opt[0].shape,msg.opt[0].color);
-					obj.reset(4,msg.opt[1].shape,msg.opt[1].color);
-					obj.reset(5,msg.opt[2].shape,msg.opt[2].color);
+					if(obj.turn){
+						obj.ul[0].style.display = "none";
+						obj.ul[1].style.display = "block";
+						obj.reset(3,msg[0].shape,msg[0].color);
+						obj.reset(4,msg[1].shape,msg[1].color);
+						obj.reset(5,msg[2].shape,msg[2].color);
+						obj.option[3].e.style.top = obj.optop + "px";
+						obj.option[4].e.style.top = obj.optop + "px";
+						obj.option[5].e.style.top = obj.optop + "px";
+						obj.option[3].e.style.left = obj.side + "px";
+						obj.option[4].e.style.left = obj.opsize*5 +obj.side+ "px";
+						obj.option[5].e.style.left = obj.opsize*10 +obj.side+ "px";
+					}
 				});
 				obj.socket.on('game end', function(msg) {
 					//游戏结束

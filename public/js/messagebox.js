@@ -86,10 +86,10 @@
 						that.className = "hideNot"
 				},3000);
 			}else if(this.className == "hideNot")
-				n.removeChild(this);
+				this.style.display="none";
 		});
 		setTimeout(function(){
-			if(nn)n.removeChild(nn);
+			n.removeChild(nn);
 		},5000);
 	}
 })()

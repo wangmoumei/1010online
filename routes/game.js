@@ -16,7 +16,7 @@ game.roomNum = 0;
 
 game.Room = {};
 game.roomLog = {};
-
+game.maxPerson = 5;
 game.initialize = function(http) {
     console.log('initialize');
     this.io = socketIo(http);
@@ -56,7 +56,7 @@ game.createRoom = function(socket){
 	socket.on('create room', function(msg){
 		if(msg = 1){
 			
-			var room = {name:that.roomNum,count:1,status:false};
+			var room = {num:that.roomNum,count:1,status:false};
 			that.Room["Game" + that.roomNum] = room;
 			that.roomLog[socket.id]="Game" + that.roomNum;
 			that.roomNum++;
@@ -72,11 +72,9 @@ game.createRoom = function(socket){
 
 };
 game.joinRoom = function(socket){
-    var that = this;var roomName = "";
+    var that = this;
 	socket.on('join room', function(msg){
-		var n = parseInt(msg);
-		if(n>=0) {roomName = "Game"+ n;}
-		else {roomName = msg;}
+		var roomName = getRoomName(msg);
 		if(that.Room[roomName]){
 			console.log(socket.id + "加入了"+roomName);
 			that.io.to(roomName).emit('sys mes', "新玩家加入了" + roomName);
@@ -88,7 +86,7 @@ game.joinRoom = function(socket){
 			});
 		}
 		else{
-			var room = {name:that.roomNum,count:1,status:false};
+			var room = {num:that.roomNum,count:1,status:false};
 			that.Room[roomName] = room;
 			that.roomLog[socket.id] = roomName;
 			that.roomNum++;
@@ -106,20 +104,17 @@ game.joinRoom = function(socket){
 game.gameStart = function(socket){
     var that = this;
 	socket.on('game start', function(msg){
-		//if(socket.id == that.Room[msg].joiner.id)that.Room[msg].turn = false;	
-		that.io.to(msg).emit('game start', msg);
-		console.log(msg + "游戏开始");
-		socket.emit('in turn', {type:false});
+		var roomName = that.roomLog[socket.id];
+		that.io.to(roomName).emit('game start', msg);
+		console.log(socket.id + "游戏开始");
+		
 	});
 
 };
 game.gameRun = function(socket){
 	var that = this;
     socket.on('game run', function(msg){
-		var ss;
-		if(that.Room[msg.room].turn) ss = that.Room[msg.room].joiner;
-		else ss=that.Room[msg.room].owner;
-		ss.emit('game run', msg);
+		that.io.to(that.roomLog[socket.id]).emit('game run',msg);
 	});
 
 };
@@ -130,20 +125,16 @@ game.gameEnd = function(socket){
 game.inTurn = function(socket){
     var that = this;
 	socket.on('in turn', function(msg){
-		var ss;
-		if(that.Room[msg.room].turn) ss = that.Room[msg.room].joiner;
-		else ss=that.Room[msg.room].owner;
-		ss.emit('out turn', msg.opt);
+		that.io.to(that.roomLog[socket.id]).emit('out turn',msg);
+		console.log(msg);
 	});
 
 };
 game.outTurn = function(socket){
     var that = this;
 	socket.on('out turn', function(msg){
-		var ss;
-		if(that.Room[msg.room].turn) ss = that.Room[msg.room].joiner;
-		else ss=that.Room[msg.room].owner;
-		ss.emit('in turn', {type:true,body:msg.body});
+		console.log("移成功了\n"+msg);
+		that.io.to(that.roomLog[socket.id]).emit('in turn',msg);
 	});
 
 };
@@ -178,5 +169,10 @@ game.disconnect = function(socket){
 		}
 	});
 
+};
+var getRoomName = function(msg){
+	var n = parseInt(msg);
+	if(n>=0) return "Game"+ n;
+	else return msg;
 };
 module.exports = game;
