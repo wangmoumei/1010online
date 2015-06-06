@@ -233,7 +233,7 @@ body.day {
 	position: absolute;
 	border-radius: 4px;
 }
-#stop {
+#pause {
 	position: absolute;
 	right: 10px;
 	top: -40px;

@@ -140,9 +140,13 @@ var width = d.documentElement.clientWidth;
 var cover = gd('cover'),setting = gd('set'),toplist = gd('toplist'),about = gd("aboutbox"),menu = gd('main'),menu1 = gd("menu1"),menu2 = gd("menu2"),
 toHome = gd("returnMenu"),gameMain=gd("game"),gameEnd = gd("endGame"),logout = gd("logout"),pause = gd("pause"),multiBox = gd("multiBox"),startMulti = gd("startMulti"),logoutMulti = gd("logoutMulti"),multiContent =multiBox.getElementsByClassName("content")[0],joinBox = gd("joinBox"),joinInput = gd("joinInput") ;
 cover.addEventListener("webkitAnimationEnd",aH);
+cover.addEventListener("animationend",aH);
 setting.addEventListener("webkitAnimationEnd",aH);
+setting.addEventListener("animationend",aH);
 menu.addEventListener("webkitAnimationEnd",aH);
+menu.addEventListener("animationend",aH);
 about.addEventListener("webkitAnimationEnd",aH);
+about.addEventListener("animationend",aH);
 cover.style.height = height + 'px';
 menu.style.marginTop = (height - 128) / 2 -106 +"px";
 toplist.style.marginTop = (height - 420) / 2 + 'px';

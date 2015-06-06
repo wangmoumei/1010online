@@ -42,8 +42,6 @@ game.ioListen = function() {
         that.gameRun(socket);
 		
 		that.gameEnd(socket);
-
-		that.inTurn(socket);
 		
 		that.logout(socket);
 		
@@ -114,28 +112,26 @@ game.gameStart = function(socket){
 game.gameRun = function(socket){
 	var that = this;
     socket.on('game run', function(msg){
-		that.io.to(that.roomLog[socket.id]).emit('game run',msg);
+		switch (msg.type)
+		{
+			case 0:
+			//in turn
+				that.io.to(that.roomLog[socket.id]).emit('game run',msg);
+			break;
+			case 1:
+			//out turn
+				that.io.to(that.roomLog[socket.id]).emit('game run',msg);
+			break;
+			case 2:
+			//move
+				that.io.to(that.roomLog[socket.id]).emit('game run',msg);
+			break;
+		}
 	});
 
 };
 game.gameEnd = function(socket){
     
-
-};
-game.inTurn = function(socket){
-    var that = this;
-	socket.on('in turn', function(msg){
-		that.io.to(that.roomLog[socket.id]).emit('out turn',msg);
-		console.log(msg);
-	});
-
-};
-game.outTurn = function(socket){
-    var that = this;
-	socket.on('out turn', function(msg){
-		console.log("移成功了\n"+msg);
-		that.io.to(that.roomLog[socket.id]).emit('in turn',msg);
-	});
 
 };
 game.logout = function(socket){

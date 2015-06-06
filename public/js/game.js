@@ -119,10 +119,6 @@ function game(){
 		[0,1,1,0],
 		[0,0,0,0]],
 		
-		[[0, 0, 0, 0],
-		[0, 1, 0, 0],
-		[0, 1, 1, 1],
-		[0, 0, 0, 0]],
 
         [[0, 0, 0, 0],
 		[1, 1, 1, 0],
@@ -219,12 +215,13 @@ function game(){
 				if(mosedown){
 					var x = e.clientX  || e.pageX, 
 					y = e.clientY  || e.pageY ;
-					if(obj.type) obj.send(4,{x:x,y:y});
 					obj.option[obj.opnum].e.style.left = x - obj.game.offsetLeft - obj.size *2 + 'px';
 					obj.option[obj.opnum].e.style.top = y - obj.game.offsetTop - obj.size *2 + 'px'; 
+					if(obj.type) obj.send(4,{x:x,y:y});
 				}
 			}
 			function moveend(e){
+				console.log(obj.body);
 				e.preventDefault();
 				if(e.changedTouches){e=e.changedTouches[e.changedTouches.length-1];}
 				if(!mosedown || obj.turn!=0) return;
@@ -455,27 +452,26 @@ function game(){
                 obj.fx(100, 30, function (x) {
                     for (var i = 0; i < 10; i++)
                         for (var j = 0; j < 10; j++)
-                            if (obj.body[i][j] != newbody[i * 10 + j])
+                            if (obj.body[i][j] != newbody[i][j])
                                 obj.ilst[i * 10 + j].style.opacity = x / 100;
                 }, function () {
                     for (var i = 0; i < 10; i++)
                         for (var j = 0; j < 10; j++)
-                            if (obj.body[i][j] != newbody[i * 10 + j])
-                                (newbody[i * 10 + j] != 0) ? obj.ilst[i * 10 + j].style.background = obj.color[(newbody[i * 10 + j] - 1)] : obj.ilst[i * 10 + j].style.background = "rgb(225,225,225)";
+                            if (obj.body[i][j] != newbody[i][j])
+                                (newbody[i][j] != 0) ? obj.ilst[i * 10 + j].style.background = obj.color[(newbody[i][j] - 1)] : obj.ilst[i * 10 + j].style.background = "rgb(225,225,225)";
                     obj.fx(30, 100, function (x) {
                         for (var i = 0; i < 10; i++) {
                             for (var j = 0; j < 10; j++) {
-                                if (obj.body[i][j] != newbody[i * 10 + j]) {
+                                if (obj.body[i][j] != newbody[i][j]) {
                                     obj.ilst[i * 10 + j].style.opacity = x / 100;
-
                                 }
                             }
                         }
                     }, function () {
                         for (var i = 0; i < 10; i++)
                             for (var j = 0; j < 10; j++)
-                                if (obj.body[i][j] != newbody[i * 10 + j])
-                                    obj.body[i][j] = newbody[i * 10 + j];
+                                if (obj.body[i][j] != newbody[i][j])
+                                    obj.body[i][j] = newbody[i][j];
                     }, 300, .3);
                 }, 500, .3);
             };
@@ -502,20 +498,20 @@ function game(){
 					case 2:
 						//开始游戏
 						obj.socket.emit('game start', obj.turn);
+						console.log("send game start"+obj.turn);
 						break;	
 					case 3:
 						//in turn
 						opt = [{shape:obj.option[0].shape,color:obj.option[0].color},{shape:obj.option[1].shape,color:obj.option[1].color},{shape:obj.option[2].shape,color:obj.option[2].color}];
-						obj.socket.emit('in turn', opt);
+						obj.socket.emit('game run', {type:0,opt:opt});
 						break;	
 					case 4:
 						//move
-						obj.socket.emit('game run', {opt:opt,opnum:obj.opnum});
+						obj.socket.emit('game run', {type:2,opt:opt,opnum:obj.opnum});
 						break;	
 					case 5:
 						//out turn
-						alert(111);
-						obj.socket.emit('out turn',obj.body);
+						obj.socket.emit('game run',{type:1,opt:obj.body});
 						break;	
 					case 6:
 						//游戏结束
@@ -536,6 +532,7 @@ function game(){
 				});
 				obj.socket.on('join room', function(msg) {
 					//加入一个房间后，游戏准备开始
+					console.log("join room"+msg);
 					obj.num = msg;
 					if(obj.turn<0)obj.turn = msg;
 					if(obj.joinRoom)
@@ -543,7 +540,7 @@ function game(){
 				});
 				obj.socket.on('game start', function(msg) {
 					//游戏开始后，游戏初始化
-					
+					console.log("Game start"+msg);
 					if(obj.gameStart)obj.gameStart();
 					obj.init();
 					if(obj.turn > msg)
@@ -555,41 +552,40 @@ function game(){
 				});
 				obj.socket.on('game run', function(msg) {
 					//游戏进行中，获得对方信息
+					console.log(msg);
+					console.log(obj.turn);
 					if(obj.turn){
-						obj.option[(msg.opnum + 3)].e.style.left = msg.opt.x - obj.game.offsetLeft - obj.size *2 + 'px';
-						obj.option[(msg.opnum + 3)].e.style.top = msg.opt.y - obj.game.offsetTop - obj.size *2 + 'px'; 
-					}
-				});
-				obj.socket.on('in turn', function(msg) {
-					//
-					obj.bodyinit(msg.body);
-					if(obj.turn){
-						obj.turn --;
-						if(!obj.turn){
-							obj.send(3);
-							obj.ul[1].style.display = "none";
-							obj.ul[0].style.display = "block";
+						switch(msg.type){
+							case 0:
+								obj.ul[0].style.display = "none";
+								obj.ul[1].style.display = "block";
+								obj.reset(3,msg.opt[0].shape,msg.opt[0].color);
+								obj.reset(4,msg.opt[1].shape,msg.opt[1].color);
+								obj.reset(5,msg.opt[2].shape,msg.opt[2].color);
+								obj.option[3].e.style.top = obj.optop + "px";
+								obj.option[4].e.style.top = obj.optop + "px";
+								obj.option[5].e.style.top = obj.optop + "px";
+								obj.option[3].e.style.left = obj.side + "px";
+								obj.option[4].e.style.left = obj.opsize*5 +obj.side+ "px";
+								obj.option[5].e.style.left = obj.opsize*10 +obj.side+ "px";
+							break;
+							case 1:
+								obj.bodyinit(msg.opt);
+								obj.turn --;
+								if(!obj.turn){
+									obj.send(3);
+									obj.ul[1].style.display = "none";
+									obj.ul[0].style.display = "block";
+								}
+							break;
+							case 2:
+							obj.option[(msg.opnum + 3)].e.style.left = msg.opt.x - obj.game.offsetLeft - obj.size *2 + 'px';
+							obj.option[(msg.opnum + 3)].e.style.top = msg.opt.y - obj.game.offsetTop - obj.size *2 + 'px'; 
+							break;
 						}
 					}
-					else 
-						obj.turn = obj.num-1;
+					else if(msg.type == 1)obj.turn = obj.num-1;
 					console.log(obj.turn);
-				});
-				obj.socket.on('out turn', function(msg) {
-					//msg 选项初始化
-					if(obj.turn){
-						obj.ul[0].style.display = "none";
-						obj.ul[1].style.display = "block";
-						obj.reset(3,msg[0].shape,msg[0].color);
-						obj.reset(4,msg[1].shape,msg[1].color);
-						obj.reset(5,msg[2].shape,msg[2].color);
-						obj.option[3].e.style.top = obj.optop + "px";
-						obj.option[4].e.style.top = obj.optop + "px";
-						obj.option[5].e.style.top = obj.optop + "px";
-						obj.option[3].e.style.left = obj.side + "px";
-						obj.option[4].e.style.left = obj.opsize*5 +obj.side+ "px";
-						obj.option[5].e.style.left = obj.opsize*10 +obj.side+ "px";
-					}
 				});
 				obj.socket.on('game end', function(msg) {
 					//游戏结束
