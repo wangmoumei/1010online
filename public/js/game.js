@@ -260,6 +260,9 @@ function game(){
 					}
 					
 				}
+				else{
+					obj.send(3);
+				}
 				obj.opinit();
 				
 				
