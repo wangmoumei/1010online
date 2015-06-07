@@ -46,7 +46,7 @@
         <li id="logoutMulti"><i class="icon-stop"></i></li>
     </ul>
 </div>
-<div id="joinBox">
+<div id="joinBox" class="oShow">
 	<form id="joinForm">
 	<div class="content">
     	<div class="tipbox">输入</div>
@@ -77,7 +77,7 @@
 </div>
 <div id="endGame" style="display:none">
   <div class="end">
-    <div id="tip">最终分数</div>
+    <div>最终分数</div>
     <ul class="endlist">
       <li id="home" style="display:none"><i class="icon-home"></i></li>
       <li id="replay" style="display:inline-block"><i class="icon-cw"></i></li>
@@ -185,7 +185,7 @@ gm.gameStart = function(){
 	gameStart();
 }
 gm.gameEnd = function(){
-	s(gameEnd);
+	s(gameEnd,"oShow");
 }
 //主界面
 menu.addEventListener("click",
@@ -235,7 +235,9 @@ menu.addEventListener("click",
 			joinInput.focus();
 		break;
 		case "single":
-		
+			gm.type = 0;
+			gm.turn = 0;
+			gameStart();
 		break;
 			
 	}
@@ -264,6 +266,7 @@ setting.addEventListener("click",
 			case "logout":
 			confirmbox("确定要退出这场游戏吗",function(){
 				h(cover);h(setting);
+				if(gm.type) gm.send(8);
 				setTimeout(function(){
 					goMenu();
 				},600);
@@ -327,11 +330,18 @@ pause.onclick = function(){
 	}
 }
 function goMenu(){
-	s(menu,"oShow");s(menu1,"oShow");h(logout);	
+	h(menu1);h(gameMain);h(logout);	
+	setTimeout(function(){
+		s(menu,"oShow");
+	},600);
 }
 function gameStart(){
-	h(menu);
-	s(gameMain,"bShow");h(multiBox);h(joinBox);
+	h(menu);h(multiBox);h(joinBox);
+	setTimeout(function(){
+		s(gameMain,"bShow");
+		gm.init();
+	},600);
+	
 	logout.style.display="inline-block";
 }
 function getQueryString(name) {
@@ -341,6 +351,7 @@ function getQueryString(name) {
 		return unescape(r[2]);
 	return null;
 }
+
 </script>
 </body>
 </html>

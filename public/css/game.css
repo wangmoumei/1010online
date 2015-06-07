@@ -162,41 +162,38 @@ body.day {
 	color: #5cbde7;
 	background: #fff;
 }
-#endgame {
+#endGame {
 	display: none;
 	position: fixed;
 	top: 0px;
 	width: 100%;
 	height: 100%;
+	text-align:center;
+	background-color:rgba(0,0,0,.3);
+	color: #ffffff;
 }
-#endgame .end {
+#endGame .end {
 	margin: 0 auto;
 	width: 100%;
 	max-width: 500px;
-	background: rgba(0,0,0,.3);
 	background-size: cover;
 }
-#endgame .endlist {
-	text-align: center;
-}
-#endgame .endlist li {
+#endGame .endlist li {
 	display: inline-block;
 	width: 70px;
 	height: 70px;
 	line-height: 70px;
 	border-radius: 10px;
 	font-size: 27px;
-	color: #ffffff;
+	
 }
-#endgame .endlist li:nth-of-type(1) {
+#endGame .endlist li:nth-of-type(1) {
 	background: #de6e5f
 }
-#endgame .endlist li:nth-of-type(2) {
+#endGame .endlist li:nth-of-type(2) {
 	background: #7e8ed5
 }
-#endgame #tip{
-	text-align:center;
-	color:#fff;
+#endGame {
 		
 }
  

@@ -261,7 +261,7 @@ function game(){
 					
 				}
 				else{
-					obj.send(3);
+					if(obj.type) obj.send(3);
 				}
 				obj.opinit();
 				
@@ -553,7 +553,6 @@ function game(){
 					//游戏开始后，游戏初始化
 					console.log("Game start"+msg);
 					if(obj.gameStart)obj.gameStart();
-					obj.init();
 					if(obj.turn > msg)
 						obj.turn --;
 					else if(msg == obj.turn){
