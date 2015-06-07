@@ -133,6 +133,11 @@ function game(){
         [[0, 0, 0, 0],
 		[0, 0, 1, 0],
 		[1, 1, 1, 0],
+		[0, 0, 0, 0]],
+		
+		 [[0, 0, 0, 0],
+		[1, 0, 0, 0],
+		[1, 1, 1, 0],
 		[0, 0, 0, 0]]
 		];
 		this.color = ['#ed954b','#dd6555','#e86a82','#5cbdea','#98dc55','#ffc63e'];
@@ -247,12 +252,13 @@ function game(){
 					obj.remove();
 					if(obj.option[0].e.innerHTML=="" && obj.option[1].e.innerHTML=="" &&obj.option[2].e.innerHTML=="")
 						obj.random();
-					if(obj.checkend()){
-						document.getElementById('endgame').style.display="block";
-						
+					obj.opnum=-1;
+					if(obj.type){
+						obj.send(5);
+					}else if(obj.checkend()){
+						if(obj.gameEnd)obj.gameEnd();
 					}
-					obj.option[obj.opnum].shape = -1;obj.opnum=-1;
-					if(obj.type){ obj.send(5);console.log(obj.turn);}
+					
 				}
 				obj.opinit();
 				
@@ -263,6 +269,7 @@ function game(){
 		this.check = function (col, row) {
                 for (var i = 0 ; i < 4; i++) {
                     for (var j = 0; j < 4; j++) {
+						console.log("game check i:" + i + " j:" + j + " row:" + row + " col:" + col);
                         if (i + row < 0 || j + col < 0) {
                             if (obj.shape[obj.option[obj.opnum].shape][i][j] > 0) return false;
                         }
@@ -370,7 +377,7 @@ function game(){
 				var count=0;
 				for(var i=0;i<4;i++){
 					for(var j=0;j<4;j++){
-						if(obj.shape[obj.option[n].shape][i][j]==1){
+						if(obj.shape[obj.option[n].shape][i][j]>0){
 							count++;
 							if(count==1){
 								posti=i;
@@ -404,7 +411,7 @@ function game(){
 			obj.reset(2,z,Math.floor(Math.random()*obj.color.length));
 		}
 		this.reset = function (element, shape, color) {
-                if (shape < 0)
+                if (color < 0)
                     obj.option[element].e.innerHTML = "";
                 else {
                     var str = "";
@@ -502,7 +509,8 @@ function game(){
 						break;	
 					case 3:
 						//in turn
-						opt = [{shape:obj.option[0].shape,color:obj.option[0].color},{shape:obj.option[1].shape,color:obj.option[1].color},{shape:obj.option[2].shape,color:obj.option[2].color}];
+						
+						opt = [{shape:obj.option[0].shape,color:(obj.option[0].e.innerHTML!="")?obj.option[0].color:-1},{shape:obj.option[1].shape,color:(obj.option[1].e.innerHTML!="")?obj.option[1].color:-1},{shape:obj.option[2].shape,color:(obj.option[2].e.innerHTML!="")?obj.option[2].color:-1}];
 						obj.socket.emit('game run', {type:0,opt:opt});
 						break;	
 					case 4:
@@ -585,6 +593,12 @@ function game(){
 						}
 					}
 					else if(msg.type == 1)obj.turn = obj.num-1;
+					else{
+						if(obj.checkend()){
+							if(obj.gameEnd)obj.gameEnd();
+							else alert("游戏结束啦")
+						}
+					}
 					console.log(obj.turn);
 				});
 				obj.socket.on('game end', function(msg) {
