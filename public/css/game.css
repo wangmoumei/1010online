@@ -11,7 +11,38 @@ body.day {
 	font-size:.8em;
 	text-align: center;
 	color: #5fb7e9;
+}
+.header-on{
 	padding: 20px 0;
+	-webkit-animation: .6s headerOn;-moz-animation: .6s headerOn;animation: .6s headerOn;
+}
+.header-off{
+	padding-top: 10px;
+	-webkit-animation: .6s headerOff;-moz-animation: .6s headerOff;animation: .6s headerOff;
+}
+ @-webkit-keyframes headerOn {
+ 0% {padding-top:10px}
+ 100% {padding-top:20px}
+}
+ @-moz-keyframes headerOn {
+ 0% {padding-top:10px}
+ 100% {padding-top:20px}
+}
+ @keyframes headerOn {
+ 0% {padding-top:10px}
+ 100% {padding-top:20px}
+}
+@-webkit-keyframes headerOff {
+ 0% {padding-top:20px}
+ 100% {padding-top:10px}
+}
+ @-moz-keyframes headerOff {
+ 0% {padding-top:20px}
+ 100% {padding-top:10px}
+}
+ @keyframes headerOff {
+ 0% {padding-top:20px}
+ 100% {padding-top:10px}
 }
 #header i {
 	font-size: 35px;
@@ -26,6 +57,20 @@ body.day {
 }
 #header span.top {
 	color: #67bfc9
+}
+#otherScore{
+	height:20px;
+	width:100%;
+	max-width:450px;
+	display:none;
+}
+#otherScore li{
+	box-flex: 1;
+	-webkit-box-flex: 1;
+	-moz-box-flex: 1;
+	-ms-box-flex: 1;
+	flex: 1;
+	-webkit-flex: 1;
 }
 #main {
 	font-size:.8em;
@@ -67,7 +112,7 @@ body.day {
 	font-size:1.4em;
 	position:relative;bottom:0;
 }
-#main .btnbox,#multiBox .btnbox,#joinBox .btnbox {
+#main .btnbox,#multiBox .btnbox,#joinBox .btnbox,#otherScore {
 	text-align: center;
 	margin: 5px auto;
 	display: box;
@@ -233,7 +278,7 @@ body.day {
 #pause {
 	position: absolute;
 	right: 10px;
-	top: -40px;
+	top: -65px;
 	font-size: 24px;
 	color: #ffda94;
 }
@@ -245,7 +290,7 @@ body.day {
 	display: none;
 	padding-top: 20px;
 }
-#toplist li {
+#toplist li ,#scoreList li{
 	font-size:.8em;
 	width: 90%;
 	max-width: 500px;
@@ -258,35 +303,35 @@ body.day {
 	display: none;
 	box-shadow: 1px 1px 3px rgba(0,0,0,.5);
 }
-#toplist li:nth-of-type(5n+1) {
+#toplist li:nth-of-type(5n+1),#scoreList li:nth-of-type(5n+1) {
 	background: rgb(221, 101, 85);
 }
-#toplist li:nth-of-type(5n+2) {
+#toplist li:nth-of-type(5n+2),#scoreList li:nth-of-type(5n+2) {
 	background: rgb(237, 149, 75)
 }
-#toplist li:nth-of-type(5n+3) {
+#toplist li:nth-of-type(5n+3),#scoreList li:nth-of-type(5n+3) {
 	background: rgb(255, 198, 62)
 }
-#toplist li:nth-of-type(5n+4) {
+#toplist li:nth-of-type(5n+4),#scoreList li:nth-of-type(5n+4) {
 	background: rgb(152, 220, 85)
 }
-#toplist li:nth-of-type(5n) {
+#toplist li:nth-of-type(5n),#scoreList li:nth-of-type(5n) {
 	background: #7d8ed4
 }
-#toplist li span {
+#toplist li span,#scoreList li span {
 	display: inline-block;
 }
-#toplist li span:nth-of-type(1) {
+#toplist li span:nth-of-type(1),#scoreList li span:nth-of-type(1){
 	width: 15px;
 	font-size: 20px;
 }
-#toplist li span:nth-of-type(2) {
+#toplist li span:nth-of-type(2),#scoreList li span:nth-of-type(2){
 	width: 80px;
 }
-#toplist li span:nth-of-type(3) {
+#toplist li span:nth-of-type(3),#scoreList li span:nth-of-type(3){
 	width: 40px;
 }
-#toplist li span:nth-of-type(4) {
+#toplist li span:nth-of-type(4),#scoreList li span:nth-of-type(4){
 	width: 150px;
 	font-size: 13px;
 }

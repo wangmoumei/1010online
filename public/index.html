@@ -17,9 +17,12 @@
 </head>
 
 <body class="day">
-<div id="header">
+<div id="header" class="header-on">
 <span id="score"></span>
   <i class="icon-award"></i>
+  <ul id="otherScore">
+  
+  </ul>
   
 </div>
 <div id="main">
@@ -78,6 +81,9 @@
 <div id="endGame" style="display:none">
   <div class="end">
     <div>最终分数</div>
+    <ul id="scoreList">
+    
+    </ul>
     <ul class="endlist">
       <li id="home" style="display:none"><i class="icon-home"></i></li>
       <li id="replay" style="display:inline-block"><i class="icon-cw"></i></li>
@@ -138,7 +144,7 @@ function aH(){var c=this.className;if(c.match(/Hide/)!=null){this.style.display 
 var height = d.documentElement.clientHeight;
 var width = d.documentElement.clientWidth;
 var cover = gd('cover'),setting = gd('set'),toplist = gd('toplist'),about = gd("aboutbox"),menu = gd('main'),menu1 = gd("menu1"),menu2 = gd("menu2"),
-toHome = gd("returnMenu"),gameMain=gd("game"),gameEnd = gd("endGame"),logout = gd("logout"),pause = gd("pause"),multiBox = gd("multiBox"),startMulti = gd("startMulti"),logoutMulti = gd("logoutMulti"),multiContent =multiBox.getElementsByClassName("content")[0],joinBox = gd("joinBox"),joinInput = gd("joinInput") ;
+toHome = gd("returnMenu"),gameMain=gd("game"),gameEnd = gd("endGame"),logout = gd("logout"),pause = gd("pause"),multiBox = gd("multiBox"),startMulti = gd("startMulti"),logoutMulti = gd("logoutMulti"),multiContent =multiBox.getElementsByClassName("content")[0],joinBox = gd("joinBox"),joinInput = gd("joinInput"),scoreList = gd("scoreList"),header = gd("header"),otherScore = gd("otherScore") ;
 cover.addEventListener("webkitAnimationEnd",aH);
 cover.addEventListener("animationend",aH);
 setting.addEventListener("webkitAnimationEnd",aH);
@@ -330,16 +336,20 @@ pause.onclick = function(){
 	}
 }
 function goMenu(){
-	h(menu1);h(gameMain);h(logout);	
+	h(menu1);h(gameMain);h(logout);h(otherScore);
+	
 	setTimeout(function(){
 		s(menu,"oShow");
+		header.className = "header-on";
 	},600);
 }
 function gameStart(){
 	h(menu);h(multiBox);h(joinBox);
 	setTimeout(function(){
 		s(gameMain,"bShow");
+		s(otherScore,"oShow");
 		gm.init();
+		header.className = "header-off";
 	},600);
 	
 	logout.style.display="inline-block";
