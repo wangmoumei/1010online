@@ -11,9 +11,11 @@ body.day {
 	font-size:.8em;
 	text-align: center;
 	color: #5fb7e9;
+	padding-bottom:20px;
 }
 .header-on{
-	padding: 20px 0;
+	padding-top: 20px;
+	
 	-webkit-animation: .6s headerOn;-moz-animation: .6s headerOn;animation: .6s headerOn;
 }
 .header-off{
@@ -59,10 +61,14 @@ body.day {
 	color: #67bfc9
 }
 #otherScore{
+	display:none;
+	
+}
+#otherScore ul{
 	height:20px;
 	width:100%;
 	max-width:450px;
-	display:none;
+	text-align:center;
 }
 #otherScore li{
 	box-flex: 1;
@@ -71,6 +77,9 @@ body.day {
 	-ms-box-flex: 1;
 	flex: 1;
 	-webkit-flex: 1;
+}
+#otherScore li div{
+	
 }
 #main {
 	font-size:.8em;
@@ -112,7 +121,7 @@ body.day {
 	font-size:1.4em;
 	position:relative;bottom:0;
 }
-#main .btnbox,#multiBox .btnbox,#joinBox .btnbox,#otherScore {
+#main .btnbox,#multiBox .btnbox,#joinBox .btnbox,#otherScore ul{
 	text-align: center;
 	margin: 5px auto;
 	display: box;
@@ -278,7 +287,7 @@ body.day {
 #pause {
 	position: absolute;
 	right: 10px;
-	top: -65px;
+	top: -35px;
 	font-size: 24px;
 	color: #ffda94;
 }

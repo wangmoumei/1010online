@@ -145,7 +145,6 @@ function game(){
 		//alert(this.shape[1][1][1]);
 		this.init = function(){
 			obj.score=0;
-			obj.score1 = 0;
 			obj.scorebox.innerHTML = 0;
 			obj.body = [
 				[0,0,0,0,0,0,0,0,0,0],
@@ -161,7 +160,7 @@ function game(){
 			];
 			obj.size = Math.floor(obj.gamebody.clientWidth / 10) ;
 			obj.gamebody.style.left = (obj.gamebody.clientWidth - (obj.size * 10 - 2))/2 + 'px';
-			obj.optop = obj.size * 10 + 50;
+			obj.optop = obj.size * 10 + 30;
 			obj.opsize = Math.floor(obj.gamebody.clientWidth / 14) ;
 			obj.side = (obj.gamebody.clientWidth - (obj.opsize * 14 - 1))/2;
 			var str = "";
