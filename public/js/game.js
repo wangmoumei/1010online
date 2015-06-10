@@ -237,7 +237,7 @@ function game(){
 				//obj.shape[obj.option[obj.opnum].shape]
 				if(obj.check(col,row)){
 					obj.option[obj.opnum].e.innerHTML="";
-					obj.scorebox.innerHTML = obj.score;
+					//obj.scorebox.innerHTML = obj.score;
 					for(var i = 0 ;i<4;i++){
 						for(var j=0;j<4;j++)
 						{
@@ -551,6 +551,7 @@ function game(){
 				obj.socket.on('game start', function(msg) {
 					//游戏开始后，游戏初始化
 					console.log("Game start"+msg);
+					gm.init();
 					if(obj.gameStart)obj.gameStart();
 					if(obj.turn > msg)
 						obj.turn --;

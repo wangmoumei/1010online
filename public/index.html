@@ -357,7 +357,8 @@ function gameStart(){
 	h(menu);h(multiBox);h(joinBox);
 	setTimeout(function(){
 		s(gameMain,"bShow");
-		s(otherScore,"oShow");
+		//s(otherScore,"oShow");
+		if(!gm.type)
 		gm.init();
 		header.className = "header-off";
 	},600);
