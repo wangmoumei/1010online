@@ -28,3 +28,6 @@
 .icon-logout:before { content: '\e81a'; } /* '' */
 .icon-error-alt:before { content: '\e81b'; } /* '' */
 .icon-chart-bar:before { content: '\e81c'; } /* '' */
+.icon-cog-alt:before { content: '\e81d'; } /* '' */
+.icon-bookmark:before { content: '\e81e'; } /* '' */
+.icon-tags:before { content: '\e81f'; } /* '' */

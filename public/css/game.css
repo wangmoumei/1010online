@@ -8,79 +8,66 @@ body.day {
 	background: #fff
 }
 #header {
-	font-size:.8em;
 	text-align: center;
 	color: #5fb7e9;
-	padding-bottom:20px;
 }
 .header-on{
-	padding-top: 20px;
-	
+	padding-top: 20px;font-size:35px;
 	-webkit-animation: .6s headerOn;-moz-animation: .6s headerOn;animation: .6s headerOn;
 }
 .header-off{
-	padding-top: 10px;
+	padding-top: 5px;font-size:30px;
 	-webkit-animation: .6s headerOff;-moz-animation: .6s headerOff;animation: .6s headerOff;
 }
  @-webkit-keyframes headerOn {
- 0% {padding-top:10px}
- 100% {padding-top:20px}
+ 0% {padding-top:5px;font-size: 30px;}
+ 100% {padding-top:20px;font-size: 35px;}
 }
  @-moz-keyframes headerOn {
- 0% {padding-top:10px}
- 100% {padding-top:20px}
+ 0% {padding-top:5px;font-size: 30px;}
+ 100% {padding-top:20px;font-size: 35px;}
 }
  @keyframes headerOn {
- 0% {padding-top:10px}
- 100% {padding-top:20px}
+ 0% {padding-top:5px;font-size: 30px;}
+ 100% {padding-top:20px;font-size: 35px;}
 }
 @-webkit-keyframes headerOff {
- 0% {padding-top:20px}
- 100% {padding-top:10px}
+ 0% {padding-top:20px;font-size:35px;}
+ 100% {padding-top:5px;font-size:30px;}
 }
  @-moz-keyframes headerOff {
- 0% {padding-top:20px}
- 100% {padding-top:10px}
+ 0% {padding-top:20px;font-size:35px;}
+ 100% {padding-top:5px;font-size:30px;}
 }
  @keyframes headerOff {
- 0% {padding-top:20px}
- 100% {padding-top:10px}
-}
-#header i {
-	font-size: 35px;
-	position: relative;
-	top: 2px;
+ 0% {padding-top:20px;font-size:35px;}
+ 100% {padding-top:5px;font-size:30px;}
 }
 #header span {
-	font-size: 20px;
+	display:inline-block;
+	color:#fff;
+	border-radius:4px;
+	padding:0 5px;
 }
-#header span.mine {
-	color: #c0de88
-}
-#header span.top {
-	color: #67bfc9
-}
-#otherScore{
-	display:none;
-	
-}
-#otherScore ul{
-	height:20px;
-	width:100%;
+#player{background: #54d5eb;font-size:16px;}
+#score{background: #f75455;font-size:18px;}
+#nav {
 	max-width:450px;
-	text-align:center;
-}
-#otherScore li{
-	box-flex: 1;
-	-webkit-box-flex: 1;
-	-moz-box-flex: 1;
-	-ms-box-flex: 1;
-	flex: 1;
-	-webkit-flex: 1;
-}
-#otherScore li div{
+	margin:0 auto;
+	font-size:22px;
+	overflow:hidden;	
+	display:none;
+	padding:0 7% 5px 7%;
+	text-align:left;
 	
 }
+#nav div {
+	float:right;
+	margin-left:6px;
+}
+#pause{color: #f9aa33;}
+#board{color: #f75455;}
+#chatOpen{color: #54d5eb;}
 #main {
 	font-size:.8em;
 	margin-top: 50px;
@@ -264,6 +251,7 @@ body.day {
 	margin: 0 auto;
 	display: none;
 	position: relative;
+	bottom:0;
 }
 .gamebody {
 	position: relative;
@@ -284,13 +272,7 @@ body.day {
 	position: absolute;
 	border-radius: 4px;
 }
-#pause {
-	position: absolute;
-	right: 10px;
-	top: -35px;
-	font-size: 24px;
-	color: #ffda94;
-}
+
 #toplist {
 	position: fixed;
 	top: 0;

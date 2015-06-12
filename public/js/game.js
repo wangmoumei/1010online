@@ -9,6 +9,7 @@ function game(){
 		this.num = 0;
 		this.gamebody = d.getElementById('gamebody');
 		this.scorebox = d.getElementById('score');
+		this.name = d.getElementById('player');
 		this.game = d.getElementById('game');
 		this.option = [{e:d.getElementById('option1')},{e:d.getElementById('option2')},{e:d.getElementById('option3')},{e:d.getElementById('op-option1')},{e:d.getElementById('op-option2')},{e:d.getElementById('op-option3')}];
 		this.ul = [d.getElementsByClassName("chosen-list")[0],d.getElementsByClassName("chosen-list")[1]];
@@ -158,11 +159,18 @@ function game(){
 				[0,0,0,0,0,0,0,0,0,0],
 				[0,0,0,0,0,0,0,0,0,0]
 			];
-			obj.size = Math.floor(obj.gamebody.clientWidth / 10) ;
-			obj.gamebody.style.left = (obj.gamebody.clientWidth - (obj.size * 10 - 2))/2 + 'px';
+			var width = obj.gamebody.clientWidth,parent =obj.gamebody.parentNode ;
+			while(true){
+				if(width>450){width=450;break;}else if(width>0)break;
+				width = parent.clientWidth;
+				parent=parent.parentNode;
+			}
+			obj.size = Math.floor(width / 10) ;
+			obj.gamebody.style.left = (width - (obj.size * 10 - 2))/2 + 'px';
 			obj.optop = obj.size * 10 + 30;
-			obj.opsize = Math.floor(obj.gamebody.clientWidth / 14) ;
-			obj.side = (obj.gamebody.clientWidth - (obj.opsize * 14 - 1))/2;
+			obj.opsize = Math.floor(width / 14) ;
+			obj.side = (width - (obj.opsize * 14 - 1))/2;
+			obj.random();
 			var str = "";
 			for(var i=0;i<10;i++){
 				for(var j= 0 ;j<10;j++){
@@ -171,7 +179,7 @@ function game(){
 			}
 			obj.gamebody.innerHTML = str;
 			obj.ilst = obj.gamebody.getElementsByTagName("i");
-			obj.random();
+			
 			if(obj.gamenum<1)
 				obj.bind();
 			obj.gamenum++;
@@ -413,6 +421,7 @@ function game(){
 			obj.reset(2,z,Math.floor(Math.random()*obj.color.length));
 		}
 		this.reset = function (element, shape, color) {
+			console.log(arguments);
                 if (color < 0)
                     obj.option[element].e.innerHTML = "";
                 else {
@@ -513,6 +522,7 @@ function game(){
 						//in turn
 						
 						opt = [{shape:obj.option[0].shape,color:(obj.option[0].e.innerHTML!="")?obj.option[0].color:-1},{shape:obj.option[1].shape,color:(obj.option[1].e.innerHTML!="")?obj.option[1].color:-1},{shape:obj.option[2].shape,color:(obj.option[2].e.innerHTML!="")?obj.option[2].color:-1}];
+						console.log(opt);
 						obj.socket.emit('game run', {type:0,opt:opt});
 						break;	
 					case 4:
@@ -521,7 +531,7 @@ function game(){
 						break;	
 					case 5:
 						//out turn
-						obj.socket.emit('game run',{type:1,opt:obj.body});
+						obj.socket.emit('game run',{type:1,opt:obj.body,score:obj.score});
 						break;	
 					case 6:
 						//游戏结束
@@ -535,24 +545,28 @@ function game(){
 			this.receive = function(){
 				obj.socket.on('create room', function(msg) {
 					//创建一个房间后，获得房间号
-					obj.room = msg;
-					obj.turn = 1;
+					obj.room = msg.room;
+					obj.turn = msg.player.turn;
+					obj.name.innerHTML = msg.player.name;
 					if(obj.createRoom)
-						obj.createRoom(msg);
+						obj.createRoom();
 				});
 				obj.socket.on('join room', function(msg) {
 					//加入一个房间后，游戏准备开始
 					console.log("join room"+msg);
-					obj.num = msg;
-					if(obj.turn<0)obj.turn = msg;
+					obj.num = msg.num;
+					if(obj.turn<0){
+						obj.turn = msg.player.turn;
+						obj.name.innerHTML = msg.player.name;
+					}
 					if(obj.joinRoom)
-						obj.joinRoom(msg);
+						obj.joinRoom();
 				});
 				obj.socket.on('game start', function(msg) {
 					//游戏开始后，游戏初始化
 					console.log("Game start"+msg);
-					gm.init();
 					if(obj.gameStart)obj.gameStart();
+					obj.init();
 					if(obj.turn > msg)
 						obj.turn --;
 					else if(msg == obj.turn){
@@ -562,8 +576,6 @@ function game(){
 				});
 				obj.socket.on('game run', function(msg) {
 					//游戏进行中，获得对方信息
-					console.log(msg);
-					console.log(obj.turn);
 					if(obj.turn){
 						switch(msg.type){
 							case 0:
@@ -581,6 +593,7 @@ function game(){
 							break;
 							case 1:
 								obj.bodyinit(msg.opt);
+								
 								obj.turn --;
 								if(!obj.turn){
 									obj.send(3);
@@ -610,7 +623,7 @@ function game(){
 					//游戏结束
 					obj.num = msg;
 					if(gm.logout)
-						gm.logout(msg);
+						gm.logout();
 				});
 				obj.socket.on('sys mes', function(msg) {
 					//游戏结束

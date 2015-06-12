@@ -18,21 +18,14 @@
 
 <body class="day">
 <div id="header" class="header-on">
-<span id="score"></span>
   <i class="icon-award"></i>
-  <div id="otherScore">
-  <ul>
-  	<li>
-    	<div>
-        	aaaa 1111
-        </div>
-    </li>
-    <li>
-    	<div>
-        	bbbb 2222
-        </div>
-    </li>
-  </ul>
+  <div id="nav">
+      <span id="player">Player01</span>
+      <span id="score"></span>
+	<div id="pause"><i class="icon-cog-alt"></i></div>
+     <div id="chatOpen"><i class="icon-chat"></i></div>
+    <div id="board"><i class="icon-bookmark"></i></div>
+   
   </div>
 </div>
 <div id="main">
@@ -74,7 +67,7 @@
     </form>
 </div>
 <div id="game">
-  <div id="pause"><i class="icon-pause"></i></div>
+  
   <div class="gamebody" id="gamebody"> <i></i> </div>
   <ul class="chosen-list">
     <li id="option1"> </li>
@@ -154,7 +147,7 @@ function aH(){var c=this.className;if(c.match(/Hide/)!=null){this.style.display 
 var height = d.documentElement.clientHeight;
 var width = d.documentElement.clientWidth;
 var cover = gd('cover'),setting = gd('set'),toplist = gd('toplist'),about = gd("aboutbox"),menu = gd('main'),menu1 = gd("menu1"),menu2 = gd("menu2"),
-toHome = gd("returnMenu"),gameMain=gd("game"),gameEnd = gd("endGame"),logout = gd("logout"),pause = gd("pause"),multiBox = gd("multiBox"),startMulti = gd("startMulti"),logoutMulti = gd("logoutMulti"),multiContent =multiBox.getElementsByClassName("content")[0],joinBox = gd("joinBox"),joinInput = gd("joinInput"),scoreList = gd("scoreList"),header = gd("header"),otherScore = gd("otherScore") ;
+toHome = gd("returnMenu"),gameMain=gd("game"),gameEnd = gd("endGame"),logout = gd("logout"),pause = gd("pause"),multiBox = gd("multiBox"),startMulti = gd("startMulti"),logoutMulti = gd("logoutMulti"),multiContent =multiBox.getElementsByClassName("content")[0],joinBox = gd("joinBox"),joinInput = gd("joinInput"),scoreList = gd("scoreList"),header = gd("header"),nav = gd("nav") ;
 cover.addEventListener("webkitAnimationEnd",aH);
 cover.addEventListener("animationend",aH);
 setting.addEventListener("webkitAnimationEnd",aH);
@@ -171,31 +164,31 @@ joinBox.style.paddingTop =  (height - 180)/2 + "px";
 gameEnd.getElementsByTagName("div")[0].style.marginTop=(height-90)/2+"px";
 cover.onclick = function(){
 	h(setting);h(cover);h(about);h(toplist);
-	pause.getElementsByTagName('i')[0].className = "icon-pause";
 };
 var gm=new game(); 
+gm.s = s;gm.h=h;
 if(getQueryString("room") != null){
 	gm.room = parseInt(getQueryString("room"));
 	gm.send(1);
 }
-gm.createRoom = function(room){
+gm.createRoom = function(){
 	if(joinBox.style.display == "block") h(joinBox);
 	if(multiBox.style.display != "block") s(multiBox,"oShow");
-	multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+room+'</div><div class="tipbox">现在只有你一个人在线</div>';
+	multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+gm.room+'</div><div class="tipbox">现在只有你一个人在线</div>';
 	startMulti.className = "off";
 }
-gm.joinRoom = function(num){
+gm.joinRoom = function(){
 	if(joinBox.style.display == "block") h(joinBox);
 	if(multiBox.style.display != "block") s(multiBox,"oShow");
-	multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+gm.room+'</div><div class="tipbox">现在有'+num+'人在线</div>';
-	if(num>=2)startMulti.className = "";
+	multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+gm.room+'</div><div class="tipbox">现在有'+gm.num+'人在线</div>';
+	if(gm.num>=2)startMulti.className = "";
 }
-gm.logout = function(num){
-	if(num<2){
+gm.logout = function(){
+	if(gm.num<2){
 		multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+gm.room+'</div><div class="tipbox">现在只有你一人在线</div>';
 		startMulti.className = "off";
 	}
-	else multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+gm.room+'</div><div class="tipbox">现在有'+num+'人在线</div>';
+	else multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+gm.room+'</div><div class="tipbox">现在有'+gm.num+'人在线</div>';
 }
 gm.gameStart = function(){
 	gameStart();
@@ -313,7 +306,11 @@ multiBox.addEventListener("click",
 	 t = (t.tagName=="I")?t.parentNode:t;
 	switch(t.id){
 		case "startMulti":
-		gm.send(2);
+		if(gm.num>2)
+		{
+			gm.send(2);
+			gm.type = 1;
+		}else noticebox("人数太少啦");
 		break;
 		case "logoutMulti":
 		gm.send(8);
@@ -337,16 +334,27 @@ joinBox.addEventListener("click",
 		break;
 	}
 });
-gd("joinForm").onsubmit = function(){return false;}
-pause.onclick = function(){
-	if(setting.style.display == "block") h(setting);
-	else 	{
-		s(setting,"bShow");
-		s(cover,"oShow");
+nav.addEventListener("click",
+ function(event){
+	 var t = event.target;
+	 t = (t.tagName=="I")?t.parentNode:t;
+	switch(t.id){
+			case "pause":
+			if(setting.style.display == "block") h(setting);
+			else 	{
+				s(setting,"bShow");
+				s(cover,"oShow");
+			}
+			break;
+			case "replay":
+			h(gameEnd);
+			break;
 	}
-}
+});
+
+gd("joinForm").onsubmit = function(){return false;}
 function goMenu(){
-	h(menu1);h(gameMain);h(logout);h(otherScore);
+	h(menu1);h(gameMain);h(logout);h(nav);
 	
 	setTimeout(function(){
 		s(menu,"oShow");
@@ -357,9 +365,8 @@ function gameStart(){
 	h(menu);h(multiBox);h(joinBox);
 	setTimeout(function(){
 		s(gameMain,"bShow");
-		//s(otherScore,"oShow");
-		if(!gm.type)
-		gm.init();
+		s(nav,"oShow");
+		if(!gm.type)gm.init();
 		header.className = "header-off";
 	},600);
 	

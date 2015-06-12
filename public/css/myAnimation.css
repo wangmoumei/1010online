@@ -1,7 +1,7 @@
 @charset "utf-8";
 
-.bShow{-webkit-animation: 1s bShow;-moz-animation: 1s bShow;animation: 1s bShow;}
-.bHide{-webkit-animation: .6s bHide;-moz-animation: .6s bHide;animation: .6s bHide;}
+.bShow{-webkit-animation: 1s bShow;-moz-animation: 1s bShow;animation: 1s bShow;bottom:0;opacity: 1;}
+.bHide{-webkit-animation: .6s bHide;-moz-animation: .6s bHide;animation: .6s bHide;bottom:-100px;opacity: 0;}
 @-webkit-keyframes bShow {
  0% {bottom:-100px;opacity: 0;}
  100% {bottom:0;opacity: 1;}
@@ -28,7 +28,7 @@
 }
 
 .oShow{-webkit-animation: 1s oShow;-moz-animation: 1s oShow;animation: 1s oShow;}
-.oHide{-webkit-animation: .6s oHide ease-in;-moz-animation: .6s oHide ease-in;animation: .6s oHide ease-in;}
+.oHide{-webkit-animation: .6s oHide ease-in;-moz-animation: .6s oHide ease-in;animation: .6s oHide ease-in;opacity: 0;}
  @-webkit-keyframes oShow {
  0% {opacity: 0;}
  100% {opacity: 1;}
@@ -53,8 +53,8 @@
  0% {opacity: 1;}
  100% {opacity: 0;}
 }
-.lShow{-webkit-animation: 1s lShow;-moz-animation: 1s lShow;animation: 1s lShow;}
-.lHide{-webkit-animation: .6s lHide ease-in;-moz-animation: .6s lHide ease-in;animation: .6s lHide ease-in;}
+.lShow{-webkit-animation: 1s lShow;-moz-animation: 1s lShow;animation: 1s lShow;left:0;opacity: 1;}
+.lHide{-webkit-animation: .6s lHide ease-in;-moz-animation: .6s lHide ease-in;animation: .6s lHide ease-in;left:-100px;opacity: 0;}
  @-webkit-keyframes lShow {
 0% {left:-100px;opacity: 0;}
  100% {left:0;opacity: 1;}
