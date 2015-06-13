@@ -7,6 +7,7 @@ function game(){
 		this.type=1;
 		this.room = "null";
 		this.num = 0;
+		this.isWatch = true;this.showStatus = d.getElementById("status");
 		this.gamebody = d.getElementById('gamebody');
 		this.scorebox = d.getElementById('score');
 		this.name = d.getElementById('player');
@@ -360,6 +361,9 @@ function game(){
 
             }
 		this.checkend = function(){
+			if(obj.option[0].e.innerHTML=="" && obj.option[1].e.innerHTML=="" &&obj.option[2].e.innerHTML==""){
+				obj.random();return obj.checkend();
+			}
 			if(obj.option[0].e.innerHTML !="")
 				if(!checkop(0)) return false;
 			if(obj.option[1].e.innerHTML !="")
@@ -535,6 +539,7 @@ function game(){
 						break;	
 					case 6:
 						//游戏结束
+						obj.socket.emit('game end',null);
 						break;
 					case 8:
 						//logout
@@ -579,8 +584,11 @@ function game(){
 					if(obj.turn){
 						switch(msg.type){
 							case 0:
+							if(obj.isWatch){
 								obj.ul[0].style.display = "none";
 								obj.ul[1].style.display = "block";
+								obj.showStatus.className = "on";
+							}else obj.showStatus.className = "off";
 								obj.reset(3,msg.opt[0].shape,msg.opt[0].color);
 								obj.reset(4,msg.opt[1].shape,msg.opt[1].color);
 								obj.reset(5,msg.opt[2].shape,msg.opt[2].color);
@@ -596,9 +604,17 @@ function game(){
 								
 								obj.turn --;
 								if(!obj.turn){
-									obj.send(3);
 									obj.ul[1].style.display = "none";
 									obj.ul[0].style.display = "block";
+									obj.showStatus.className = "";
+									obj.send(3);
+									if(obj.checkend()){
+										setTimeout(function(){
+											console.log("游戏结束啦");
+											obj.send(6);
+										},1000)
+										
+									}
 								}
 							break;
 							case 2:
@@ -608,26 +624,35 @@ function game(){
 						}
 					}
 					else if(msg.type == 1)obj.turn = obj.num-1;
-					else{
-						if(obj.checkend()){
-							if(obj.gameEnd)obj.gameEnd();
-							else alert("游戏结束啦")
-						}
-					}
 					console.log(obj.turn);
 				});
 				obj.socket.on('game end', function(msg) {
 					//游戏结束
+					console.log("接受到 游戏结束啦");
+					if(obj.gameEnd)obj.gameEnd();
 				});
 				obj.socket.on('logout', function(msg) {
-					//游戏结束
+					//退出游戏
 					obj.num = msg;
-					if(gm.logout)
-						gm.logout();
+					if(obj.logout)
+						obj.logout();
 				});
 				obj.socket.on('sys mes', function(msg) {
-					//游戏结束
+					//系统消息
 					noticebox(msg);
 				});
+			}
+			this.changeStatus = function(){
+				if(obj.isWatch){
+					obj.isWatch=false;
+					obj.showStatus.className = "off";
+					obj.ul[1].style.display = "none";
+					obj.ul[0].style.display = "block";
+				}else{
+					obj.isWatch=true;
+					obj.showStatus.className = "on";
+					obj.ul[0].style.display = "none";
+					obj.ul[1].style.display = "block";
+				}
 			}
 }

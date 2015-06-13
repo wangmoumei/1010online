@@ -20,12 +20,14 @@
 <div id="header" class="header-on">
   <i class="icon-award"></i>
   <div id="nav">
+  <p><span id="status"></span></p>
       <span id="player">Player01</span>
       <span id="score"></span>
+      
 	<div id="pause"><i class="icon-cog-alt"></i></div>
      <div id="chatOpen"><i class="icon-chat"></i></div>
     <div id="board"><i class="icon-bookmark"></i></div>
-   
+   	
   </div>
 </div>
 <div id="main">
@@ -237,10 +239,12 @@ menu.addEventListener("click",
 			s(multiBox,"oShow");
 			multiBox.getElementsByClassName("content")[0].innerHTML='<div class="tipbox"></div><div class="roombox"><div><i class="ajax-loader"></i></div></div><div class="tipbox">你的游戏正在创建...</div>';
 			setTimeout(function(){gm.send(0);},1000);
-			
+			gm.type = 1;
 		break;
 		case "join":
 			s(joinBox,"oShow");
+			gm.type = 1;
+			gm.turn = -1;
 			joinInput.focus();
 		break;
 		case "single":
@@ -306,7 +310,7 @@ multiBox.addEventListener("click",
 	 t = (t.tagName=="I")?t.parentNode:t;
 	switch(t.id){
 		case "startMulti":
-		if(gm.num>2)
+		if(gm.num>1)
 		{
 			gm.send(2);
 			gm.type = 1;
@@ -346,8 +350,17 @@ nav.addEventListener("click",
 				s(cover,"oShow");
 			}
 			break;
-			case "replay":
-			h(gameEnd);
+			case "player":
+			alert("player改名字");
+			break;
+			case "status":
+			gm.changeStatus();
+			break;
+			case "board":
+			alert("记分板");
+			break;
+			case "chatOpen":
+			alert("聊天室");
 			break;
 	}
 });
