@@ -1,7 +1,7 @@
 # 1010online
 <p>1010 online (socket.io)<p>
 <p>基于nodejs + socket.io框架，采用WebSocket通讯。这个版本将舍弃IE的兼容性，本来把firefox也舍弃了，后来用计时器对firefox不支持的事件做了兼容性。而本游戏主要适用基于webkit内核的chrome（Blink）、safari以及手机。</p>
-<h3>下面是更新日志/h3>
+<h3>下面是更新日志</h3>
 <h3>初次sync ver 0.1 15.5.18</h3>
 <p>安装包，1010拿过来，照chat写好框架</p>
 <h3>ver0.1.x结束 到ver 0.2 15.5.25</h3>
