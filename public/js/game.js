@@ -545,6 +545,10 @@ function game(){
 						//logout
 						obj.socket.emit('logout', null);
 						break;
+					case 7:
+						//获取记分板
+						obj.socket.emit('score board', null);
+						break;
 				}
 			}
 			this.receive = function(){
@@ -630,6 +634,10 @@ function game(){
 					//游戏结束
 					console.log("接受到 游戏结束啦");
 					if(obj.gameEnd)obj.gameEnd();
+				});
+				obj.socket.on('score board', function(msg) {
+					//系统消息
+
 				});
 				obj.socket.on('logout', function(msg) {
 					//退出游戏

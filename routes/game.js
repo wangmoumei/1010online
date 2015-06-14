@@ -43,6 +43,8 @@ game.ioListen = function() {
 		
 		that.gameEnd(socket);
 		
+		that.getScore(socket);
+		
 		that.logout(socket);
 		
         that.disconnect(socket);
@@ -105,8 +107,10 @@ game.gameStart = function(socket){
 		var roomName = that.roomLog[socket.id];
 		if(that.Room[roomName].count<2)
 			that.io.to(roomName).emit('sys mes', "人数不足");
-		else
+		else{
 			that.io.to(roomName).emit('game start', msg);
+			that.Room[roomName][socket.id].turn = 0;
+		}
 		
 	});
 
@@ -173,6 +177,12 @@ game.disconnect = function(socket){
 		}
 	});
 
+};
+game.getScore = function(socket){
+	var that = this;
+	socket.on('score board', function(){
+		
+	});
 };
 var getRoomName = function(msg){
 	var n = parseInt(msg);

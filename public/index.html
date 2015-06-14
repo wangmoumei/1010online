@@ -351,7 +351,10 @@ nav.addEventListener("click",
 			}
 			break;
 			case "player":
-			alert("player改名字");
+			if(gm.type)
+			promptbox("输入新的昵称",t.innerHTML,function(data){
+				alert(data);
+			});
 			break;
 			case "status":
 			gm.changeStatus();
@@ -378,8 +381,13 @@ function gameStart(){
 	h(menu);h(multiBox);h(joinBox);
 	setTimeout(function(){
 		s(gameMain,"bShow");
-		s(nav,"oShow");
-		if(!gm.type)gm.init();
+		
+		if(!gm.type){
+			s(nav,"oShow single");
+			gm.init();
+		}else{
+			s(nav,"oShow");
+		}
 		header.className = "header-off";
 	},600);
 	

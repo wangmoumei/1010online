@@ -28,13 +28,14 @@
 			},600);
 		}
 	}
-	w.promptbox = function(str,fun){
+	w.promptbox = function(str,str1,fun){
 		addscreen();
-		d.getElementById('Mes-Content').innerHTML = '<input type="text" id="Mes-Var" class="Mes-Fill" placeholder="'+str+'"/>';
+		d.getElementById('Mes-Content').innerHTML ='<p style="margin:0;padding:10px 0 5px 0;text-align:left;">'+str+'</p>' + '<input type="text" id="Mes-Var" class="Mes-Fill" placeholder="'+str1+'"/>';
 		d.getElementById('Mes-Btn').innerHTML = '<a id="Mes-Exit">取消</a><a id="Mes-Ensure">提交</a>';
 		bind();
+		var input = d.getElementById('Mes-Var');input.focus();
 		d.getElementById('Mes-Ensure').onclick = function(){
-			var variable = d.getElementById('Mes-Var').value;
+			var variable = input.value;
 			m.className = "hideMes";
 			setTimeout(function(){
 				m.style.display = "none";
