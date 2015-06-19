@@ -181,9 +181,15 @@ function game(){
 			obj.gamebody.innerHTML = str;
 			obj.ilst = obj.gamebody.getElementsByTagName("i");
 			
-			if(obj.gamenum<1)
+			if(obj.gamenum<1){
 				obj.bind();
-			obj.gamenum++;
+				if(obj.first)obj.first();
+			}
+				else {
+					if(obj.type)
+						obj.gamenum++;
+				}
+			
 		}
 		this.bind = function(){
 			eventbind(obj.option[0].e);
@@ -520,7 +526,8 @@ function game(){
 					case 2:
 						//开始游戏
 						obj.socket.emit('game start', obj.turn);
-						console.log("send game start"+obj.turn);
+						if(opt)
+						obj.socket.emit('game start', obj.turn);
 						break;	
 					case 3:
 						//in turn
@@ -576,8 +583,10 @@ function game(){
 					console.log("Game start"+msg);
 					if(obj.gameStart)obj.gameStart();
 					obj.init();
-					if(obj.turn > msg)
+					if(obj.turn > msg){
 						obj.turn --;
+						obj.send(2,true);
+					}
 					else if(msg == obj.turn){
 						obj.turn = 0;
 						obj.send(3);

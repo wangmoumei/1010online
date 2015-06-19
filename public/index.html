@@ -198,6 +198,9 @@ gm.gameStart = function(){
 gm.gameEnd = function(){
 	s(gameEnd,"oShow");
 }
+gm.first = function(){
+		setSign();
+}
 //主界面
 menu.addEventListener("click",
  function(event){
@@ -342,6 +345,7 @@ nav.addEventListener("click",
  function(event){
 	 var t = event.target;
 	 t = (t.tagName=="I")?t.parentNode:t;
+	 removeSign(t);
 	switch(t.id){
 			case "pause":
 			if(setting.style.display == "block") h(setting);
@@ -400,7 +404,16 @@ function getQueryString(name) {
 		return unescape(r[2]);
 	return null;
 }
-
+function setSign(e){
+	if(e.getElementsByTagName("em")[0])return;
+	var s = document.createElement("em");
+	s.className = "sign";
+	e.appendChild(s);
+}
+function removeSign(e){
+	if(e.getElementsByTagName("em")[0])
+	e.removeChild(e.getElementsByTagName("em")[0]);
+}
 </script>
 </body>
 </html>

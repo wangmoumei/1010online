@@ -105,11 +105,16 @@ game.gameStart = function(socket){
     var that = this;
 	socket.on('game start', function(msg){
 		var roomName = that.roomLog[socket.id];
-		if(that.Room[roomName].count<2)
-			that.io.to(roomName).emit('sys mes', "人数不足");
-		else{
-			that.io.to(roomName).emit('game start', msg);
-			that.Room[roomName][socket.id].turn = 0;
+		if(!that.Room[roomName].status){
+			if(that.Room[roomName].count<2)
+				that.io.to(roomName).emit('sys mes', "人数不足");
+			else{
+				that.io.to(roomName).emit('game start', msg);
+				that.Room[roomName][socket.id].turn = 0;
+				that.Room[roomName].status = true;
+			}
+		}else{
+			that.Room[roomName][socket.id].turn = msg;
 		}
 		
 	});
@@ -141,6 +146,7 @@ game.gameEnd = function(socket){
 	var that = this;
     socket.on('game end', function(msg){
 		that.io.to(that.roomLog[socket.id]).emit('game end',msg);
+		that.Room[that.roomLog[socket.id]].status = false;
 	});
 
 };

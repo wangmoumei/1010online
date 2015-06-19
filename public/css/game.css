@@ -55,7 +55,7 @@ body.day {
 	max-width:450px;
 	margin:0 auto;
 	font-size:22px;
-	overflow:hidden;	
+	
 	display:none;
 	padding:0 7% 5px 7%;
 	text-align:left;
@@ -404,4 +404,13 @@ color:#fff;
   -webkit-animation: .85s ajax-loader-rotate steps(8) infinite;
   -moz-animation: .85s ajax-loader-rotate steps(8) infinite;
   animation: .85s ajax-loader-rotate steps(8) infinite;
+}
+em.sign{
+	position:absolute;
+	right:-1px;
+	top:-1px;
+	width:8px;
+	height:8px;
+	background-color:#f00;
+	border-radius:10px;	
 }
