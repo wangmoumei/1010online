@@ -144,6 +144,7 @@ function game(){
 		];
 		this.color = ['#ed954b','#dd6555','#e86a82','#5cbdea','#98dc55','#ffc63e'];
 		this.opnum = -1;
+		var playerlst = [];
 		//alert(this.shape[1][1][1]);
 		this.init = function(){
 			obj.score=0;
@@ -513,6 +514,7 @@ function game(){
 							obj.socket = io();
 							obj.receive();
 						}
+						//obj.playerlst.push({turn:1});
 						obj.socket.emit('create room', obj.type);
 						break;	
 					case 1:
@@ -526,8 +528,8 @@ function game(){
 					case 2:
 						//开始游戏
 						obj.socket.emit('game start', obj.turn);
-						if(opt)
-						obj.socket.emit('game start', obj.turn);
+						//if(opt)
+						//obj.socket.emit('game start', obj.turn);
 						break;	
 					case 3:
 						//in turn
@@ -562,8 +564,10 @@ function game(){
 				obj.socket.on('create room', function(msg) {
 					//创建一个房间后，获得房间号
 					obj.room = msg.room;
-					obj.turn = msg.player.turn;
-					obj.name.innerHTML = msg.player.name;
+					obj.playerlst = msg.playerlst;
+					obj.turn = obj.playerlst[0].turn;
+					obj.name.innerHTML = obj.playerlst[0].name;
+					
 					if(obj.createRoom)
 						obj.createRoom();
 				});
@@ -571,9 +575,10 @@ function game(){
 					//加入一个房间后，游戏准备开始
 					console.log("join room"+msg);
 					obj.num = msg.num;
+					obj.playerlst = msg.playerlst;
 					if(obj.turn<0){
-						obj.turn = msg.player.turn;
-						obj.name.innerHTML = msg.player.name;
+						obj.turn = msg.playerlst[obj.num-1].turn;
+						obj.name.innerHTML = msg.playerlst[obj.num-1].name;
 					}
 					if(obj.joinRoom)
 						obj.joinRoom();
@@ -581,13 +586,15 @@ function game(){
 				obj.socket.on('game start', function(msg) {
 					//游戏开始后，游戏初始化
 					console.log("Game start"+msg);
+					
 					if(obj.gameStart)obj.gameStart();
 					obj.init();
-					if(obj.turn > msg){
+					obj.playerlst = msg.playerlst;
+					if(obj.turn > msg.turn){
 						obj.turn --;
-						obj.send(2,true);
+						//obj.send(2,true);
 					}
-					else if(msg == obj.turn){
+					else if(msg.turn == obj.turn){
 						obj.turn = 0;
 						obj.send(3);
 					}
@@ -650,7 +657,9 @@ function game(){
 				});
 				obj.socket.on('logout', function(msg) {
 					//退出游戏
-					obj.num = msg;
+					obj.num = msg.playerlst.length;
+					obj.playerlst = msg.playerlst;
+					if(obj.turn > msg.turn) obj.turn--;
 					if(obj.logout)
 						obj.logout();
 				});
@@ -671,5 +680,16 @@ function game(){
 					obj.ul[0].style.display = "none";
 					obj.ul[1].style.display = "block";
 				}
+			}
+			this.getPlayerList = function(){
+					var s = "<ul>";
+					for(var i =0;i<obj.playerlst.length;i++){
+						if(obj.turn-1 == i){
+							s+="<li>我:"+obj.playerlst[i].name+"</li>";
+						}else{
+							s+="<li>"+obj.playerlst[i].name+"</li>";
+						}
+					}
+					return s + "</ul>";
 			}
 }

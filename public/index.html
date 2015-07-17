@@ -176,21 +176,21 @@ if(getQueryString("room") != null){
 gm.createRoom = function(){
 	if(joinBox.style.display == "block") h(joinBox);
 	if(multiBox.style.display != "block") s(multiBox,"oShow");
-	multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+gm.room+'</div><div class="tipbox">现在只有你一个人在线</div>';
+	multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+gm.room+'</div><div class="tipbox">现在只有你一个人在线</div><div>'+gm.getPlayerList()  + "</div>" ;
 	startMulti.className = "off";
 }
 gm.joinRoom = function(){
 	if(joinBox.style.display == "block") h(joinBox);
 	if(multiBox.style.display != "block") s(multiBox,"oShow");
-	multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+gm.room+'</div><div class="tipbox">现在有'+gm.num+'人在线</div>';
+	multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+gm.room+'</div><div class="tipbox">现在有'+gm.num+'人在线</div><div>'+gm.getPlayerList()  + "</div>" ;
 	if(gm.num>=2)startMulti.className = "";
 }
 gm.logout = function(){
 	if(gm.num<2){
-		multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+gm.room+'</div><div class="tipbox">现在只有你一人在线</div>';
+		multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+gm.room+'</div><div class="tipbox">现在只有你一人在线</div><div>'+gm.getPlayerList()  + "</div>" ;
 		startMulti.className = "off";
 	}
-	else multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+gm.room+'</div><div class="tipbox">现在有'+gm.num+'人在线</div>';
+	else multiContent.innerHTML='<div class="tipbox">你的房间</div><div class="roombox">'+gm.room+'</div><div class="tipbox">现在有'+gm.num+'人在线</div><div>'+gm.getPlayerList() + "</div>" ;
 }
 gm.gameStart = function(){
 	gameStart();
@@ -199,7 +199,9 @@ gm.gameEnd = function(){
 	s(gameEnd,"oShow");
 }
 gm.first = function(){
-		setSign();
+		setSign(gd("player"));
+		setSign(gd("board"));
+		setSign(gd("chatOpen"));
 }
 //主界面
 menu.addEventListener("click",
@@ -315,8 +317,9 @@ multiBox.addEventListener("click",
 		case "startMulti":
 		if(gm.num>1)
 		{
-			gm.send(2);
 			gm.type = 1;
+			gm.send(2);
+			
 		}else noticebox("人数太少啦");
 		break;
 		case "logoutMulti":
@@ -364,6 +367,7 @@ nav.addEventListener("click",
 			gm.changeStatus();
 			break;
 			case "board":
+			
 			alert("记分板");
 			break;
 			case "chatOpen":
