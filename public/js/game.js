@@ -565,20 +565,21 @@ function game(){
 					//创建一个房间后，获得房间号
 					obj.room = msg.room;
 					obj.playerlst = msg.playerlst;
-					obj.turn = obj.playerlst[0].turn;
-					obj.name.innerHTML = obj.playerlst[0].name;
+					obj.turn = 1;
+					obj.name.innerHTML = obj.playerlst[1].name;
 					
 					if(obj.createRoom)
 						obj.createRoom();
 				});
 				obj.socket.on('join room', function(msg) {
 					//加入一个房间后，游戏准备开始
-					console.log("join room"+msg);
-					obj.num = msg.num;
+					console.log("join room"+obj.turn);
+					obj.num = msg.playerlst.length-1;
 					obj.playerlst = msg.playerlst;
 					if(obj.turn<0){
-						obj.turn = msg.playerlst[obj.num-1].turn;
-						obj.name.innerHTML = msg.playerlst[obj.num-1].name;
+						var index = msg.playerlst.length - 1;
+						obj.turn = msg.playerlst[index].ID;
+						obj.name.innerHTML = msg.playerlst[index].name;
 					}
 					if(obj.joinRoom)
 						obj.joinRoom();
@@ -590,18 +591,14 @@ function game(){
 					if(obj.gameStart)obj.gameStart();
 					obj.init();
 					obj.playerlst = msg.playerlst;
-					if(obj.turn > msg.turn){
-						obj.turn --;
-						//obj.send(2,true);
-					}
-					else if(msg.turn == obj.turn){
-						obj.turn = 0;
+					if(msg.turn == obj.playerlst[0].ID){
 						obj.send(3);
 					}
+					
 				});
 				obj.socket.on('game run', function(msg) {
 					//游戏进行中，获得对方信息
-					if(obj.turn){
+					if(obj.turn != obj.playerlst[0].ID){
 						switch(msg.type){
 							case 0:
 							if(obj.isWatch){
@@ -622,8 +619,7 @@ function game(){
 							case 1:
 								obj.bodyinit(msg.opt);
 								
-								obj.turn --;
-								if(!obj.turn){
+								if(obj.turn == obj.playerlst[0].ID){
 									obj.ul[1].style.display = "none";
 									obj.ul[0].style.display = "block";
 									obj.showStatus.className = "";
@@ -643,7 +639,6 @@ function game(){
 							break;
 						}
 					}
-					else if(msg.type == 1)obj.turn = obj.num-1;
 					console.log(obj.turn);
 				});
 				obj.socket.on('game end', function(msg) {
@@ -657,9 +652,9 @@ function game(){
 				});
 				obj.socket.on('logout', function(msg) {
 					//退出游戏
-					obj.num = msg.playerlst.length;
+					obj.num = msg.playerlst.length-1;
 					obj.playerlst = msg.playerlst;
-					if(obj.turn > msg.turn) obj.turn--;
+					//if(obj.turn > msg.turn) obj.turn--;
 					if(obj.logout)
 						obj.logout();
 				});
@@ -683,8 +678,8 @@ function game(){
 			}
 			this.getPlayerList = function(){
 					var s = "<ul>";
-					for(var i =0;i<obj.playerlst.length;i++){
-						if(obj.turn-1 == i){
+					for(var i =1;i<obj.playerlst.length;i++){
+						if(obj.turn == obj.playerlst[i].ID){
 							s+="<li>我:"+obj.playerlst[i].name+"</li>";
 						}else{
 							s+="<li>"+obj.playerlst[i].name+"</li>";
