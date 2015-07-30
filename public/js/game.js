@@ -4,6 +4,7 @@ function game(){
 		this.socket = null;
 		this.gamenum = 0;
 		this.turn = -1;
+		
 		this.type=1;
 		this.room = "null";
 		this.num = 0;
@@ -144,7 +145,7 @@ function game(){
 		];
 		this.color = ['#ed954b','#dd6555','#e86a82','#5cbdea','#98dc55','#ffc63e'];
 		this.opnum = -1;
-		var playerlst = [];
+		this.playerlst = [{ID:0}];
 		//alert(this.shape[1][1][1]);
 		this.init = function(){
 			obj.score=0;
@@ -208,10 +209,11 @@ function game(){
 			function movestart(e){
 				e.preventDefault();
 				if(e.changedTouches){e=e.changedTouches[e.changedTouches.length-1];}
-				if(obj.turn!=0) return;
+				if(obj.turn!=obj.playerlst[0].ID) return;
 				if(!mosedown){
 					mosedown = true;
-					var x = e.clientX  || e.pageX , y = e.clientY  || e.pageY;
+					var st = document.documentElement.scrollTop ||document.body.scrollTop||window.pageYOffset ;
+					var x = e.clientX  || e.pageX , y = (e.clientY  || e.pageY )+ st;
 					if(this.id == "option1") obj.opnum = 0;
 					else if(this.id == "option2") obj.opnum = 1;
 					else if(this.id == "option3") obj.opnum = 2;
@@ -233,21 +235,23 @@ function game(){
 				e.preventDefault();
 				if(e.changedTouches){e=e.changedTouches[e.changedTouches.length-1];}
 				if(mosedown){
+					var st = document.documentElement.scrollTop ||document.body.scrollTop||window.pageYOffset ;
 					var x = e.clientX  || e.pageX, 
-					y = e.clientY  || e.pageY ;
+					y = (e.clientY  || e.pageY) +st ;
 					obj.option[obj.opnum].e.style.left = x - obj.game.offsetLeft - obj.size *2 + 'px';
 					obj.option[obj.opnum].e.style.top = y - obj.game.offsetTop - obj.size *2 + 'px'; 
 					if(obj.type) obj.send(4,{x:x,y:y});
 				}
 			}
 			function moveend(e){
-				console.log(obj.body);
+				//console.log(obj.body);
 				e.preventDefault();
 				if(e.changedTouches){e=e.changedTouches[e.changedTouches.length-1];}
-				if(!mosedown || obj.turn!=0) return;
+				if(!mosedown || obj.turn!=obj.playerlst[0].ID) return;
 				mosedown = false;
-				var x = e.clientX  || e.pageX, y = e.clientY  || e.pageY;
-				x-=obj.game.offsetLeft;y-=obj.game.offsetTop
+				var st = document.documentElement.scrollTop ||document.body.scrollTop||window.pageYOffset ;
+				var x = e.clientX  || e.pageX, y = (e.clientY  || e.pageY)+st;
+				x-=obj.game.offsetLeft;y-=obj.game.offsetTop ;
 				var col = Math.round((x-2*obj.size)/obj.size);
 				var row = Math.round((y-2*obj.size)/obj.size);
 				//obj.shape[obj.option[obj.opnum].shape]
@@ -287,7 +291,7 @@ function game(){
 		this.check = function (col, row) {
                 for (var i = 0 ; i < 4; i++) {
                     for (var j = 0; j < 4; j++) {
-						console.log("game check i:" + i + " j:" + j + " row:" + row + " col:" + col);
+						//console.log("game check i:" + i + " j:" + j + " row:" + row + " col:" + col);
                         if (i + row < 0 || j + col < 0) {
                             if (obj.shape[obj.option[obj.opnum].shape][i][j] > 0) return false;
                         }
@@ -432,7 +436,7 @@ function game(){
 			obj.reset(2,z,Math.floor(Math.random()*obj.color.length));
 		}
 		this.reset = function (element, shape, color) {
-			console.log(arguments);
+			//console.log(arguments);
                 if (color < 0)
                     obj.option[element].e.innerHTML = "";
                 else {
@@ -527,7 +531,7 @@ function game(){
 						break;	
 					case 2:
 						//开始游戏
-						obj.socket.emit('game start', obj.turn);
+						obj.socket.emit('game start', 1);
 						//if(opt)
 						//obj.socket.emit('game start', obj.turn);
 						break;	
@@ -535,7 +539,7 @@ function game(){
 						//in turn
 						
 						opt = [{shape:obj.option[0].shape,color:(obj.option[0].e.innerHTML!="")?obj.option[0].color:-1},{shape:obj.option[1].shape,color:(obj.option[1].e.innerHTML!="")?obj.option[1].color:-1},{shape:obj.option[2].shape,color:(obj.option[2].e.innerHTML!="")?obj.option[2].color:-1}];
-						console.log(opt);
+						//console.log(opt);
 						obj.socket.emit('game run', {type:0,opt:opt});
 						break;	
 					case 4:
@@ -586,39 +590,47 @@ function game(){
 				});
 				obj.socket.on('game start', function(msg) {
 					//游戏开始后，游戏初始化
-					console.log("Game start"+msg);
-					
+					//console.log("Game start"+msg.playerlst[0].ID);
+					//console.log("Game start"+obj.turn);
+					if(!msg.start){
+						noticebox("游戏正在进行中...");
+						return;	
+					}
 					if(obj.gameStart)obj.gameStart();
 					obj.init();
 					obj.playerlst = msg.playerlst;
-					if(msg.turn == obj.playerlst[0].ID){
+					if(obj.turn == obj.playerlst[0].ID){
 						obj.send(3);
 					}
 					
 				});
 				obj.socket.on('game run', function(msg) {
 					//游戏进行中，获得对方信息
-					if(obj.turn != obj.playerlst[0].ID){
+					
+					
 						switch(msg.type){
 							case 0:
-							if(obj.isWatch){
-								obj.ul[0].style.display = "none";
-								obj.ul[1].style.display = "block";
-								obj.showStatus.className = "on";
-							}else obj.showStatus.className = "off";
-								obj.reset(3,msg.opt[0].shape,msg.opt[0].color);
-								obj.reset(4,msg.opt[1].shape,msg.opt[1].color);
-								obj.reset(5,msg.opt[2].shape,msg.opt[2].color);
-								obj.option[3].e.style.top = obj.optop + "px";
-								obj.option[4].e.style.top = obj.optop + "px";
-								obj.option[5].e.style.top = obj.optop + "px";
-								obj.option[3].e.style.left = obj.side + "px";
-								obj.option[4].e.style.left = obj.opsize*5 +obj.side+ "px";
-								obj.option[5].e.style.left = obj.opsize*10 +obj.side+ "px";
-							break;
+								if(obj.turn != obj.playerlst[0].ID){
+									if(obj.isWatch){
+										obj.ul[0].style.display = "none";
+										obj.ul[1].style.display = "block";
+										obj.showStatus.className = "on";
+									}else obj.showStatus.className = "off";
+									obj.reset(3,msg.opt[0].shape,msg.opt[0].color);
+									obj.reset(4,msg.opt[1].shape,msg.opt[1].color);
+									obj.reset(5,msg.opt[2].shape,msg.opt[2].color);
+									obj.option[3].e.style.top = obj.optop + "px";
+									obj.option[4].e.style.top = obj.optop + "px";
+									obj.option[5].e.style.top = obj.optop + "px";
+									obj.option[3].e.style.left = obj.side + "px";
+									obj.option[4].e.style.left = obj.opsize*5 +obj.side+ "px";
+									obj.option[5].e.style.left = obj.opsize*10 +obj.side+ "px";
+								}
+								break;
 							case 1:
 								obj.bodyinit(msg.opt);
-								
+								obj.playerlst = msg.playerlst;
+								console.log(obj.turn + " || " +obj.playerlst[0].ID);
 								if(obj.turn == obj.playerlst[0].ID){
 									obj.ul[1].style.display = "none";
 									obj.ul[0].style.display = "block";
@@ -629,17 +641,17 @@ function game(){
 											console.log("游戏结束啦");
 											obj.send(6);
 										},1000)
-										
 									}
 								}
 							break;
 							case 2:
-							obj.option[(msg.opnum + 3)].e.style.left = msg.opt.x - obj.game.offsetLeft - obj.size *2 + 'px';
-							obj.option[(msg.opnum + 3)].e.style.top = msg.opt.y - obj.game.offsetTop - obj.size *2 + 'px'; 
+							if(obj.turn != obj.playerlst[0].ID){
+								obj.option[(msg.opnum + 3)].e.style.left = msg.opt.x - obj.game.offsetLeft - obj.size *2 + 'px';
+								obj.option[(msg.opnum + 3)].e.style.top = msg.opt.y - obj.game.offsetTop - obj.size *2 + 'px'; 
+							}
 							break;
 						}
-					}
-					console.log(obj.turn);
+					//console.log(obj.turn);
 				});
 				obj.socket.on('game end', function(msg) {
 					//游戏结束
