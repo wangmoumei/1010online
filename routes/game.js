@@ -49,6 +49,7 @@ game.ioListen = function() {
 		
         that.disconnect(socket);
 
+		that.chat(socket);
     });
 };
 game.createRoom = function(socket){
@@ -213,6 +214,15 @@ game.getPlayerList = function(roomName){
 		
 	return playerlst;
 };
+game.chat = function(socket){
+	var that = this;
+	var roomName = that.roomLog[socket.id];
+	socket.on('change name', function(msg){
+		that.Room[roomName][socket.id].name = msg;
+		
+	})
+
+}
 /*game.getScore = function(socket){
 	var that = this;
 	socket.on('score board', function(){

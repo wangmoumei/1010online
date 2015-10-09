@@ -359,7 +359,7 @@ nav.addEventListener("click",
 			case "player":
 			if(gm.type)
 			promptbox("输入新的昵称",t.innerHTML,function(data){
-				alert(data);
+				gm.send(10,data);
 			});
 			break;
 			case "status":

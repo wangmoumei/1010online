@@ -562,6 +562,10 @@ function game(){
 						//获取记分板
 						obj.socket.emit('score board', null);
 						break;
+					case 10:
+						//改名
+						obj.socket.emit('change name', opt);
+						break;
 				}
 			}
 			this.receive = function(){
